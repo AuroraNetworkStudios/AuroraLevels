@@ -1,8 +1,20 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.net.URI
+import java.util.*
+
+fun loadProperties(filename: String): Properties {
+    val properties = Properties()
+    if (!file(filename).exists()) {
+        return properties
+    }
+    file(filename).inputStream().use { properties.load(it) }
+    return properties
+}
 
 plugins {
     id("java")
     id("io.github.goooler.shadow") version "8.1.7"
+    id("maven-publish")
 }
 
 group = "gg.auroramc"
@@ -64,5 +76,28 @@ tasks.processResources {
 tasks {
     build {
         dependsOn(shadowJar)
+    }
+}
+
+val publishing = loadProperties("publish.properties")
+
+publishing {
+    repositories {
+        maven {
+            name = "AuroraMC"
+            url = URI.create("https://repo.auroramc.gg/repository/maven-releases/")
+            credentials {
+                username = publishing.getProperty("username")
+                password = publishing.getProperty("password")
+            }
+        }
+    }
+
+    publications.create<MavenPublication>("mavenJava") {
+        groupId = "gg.auroramc"
+        artifactId = "AuroraLevels"
+        version = project.version.toString()
+
+        from(components["java"])
     }
 }
