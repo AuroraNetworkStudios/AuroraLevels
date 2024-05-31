@@ -1,0 +1,14 @@
+reloaded: "&aReloaded configuration!"
+level-set: "&aLevel set to {level} for player {player}!"
+level-set-target: "&aYour level was set to {level}!"
+data-not-loaded-yet: "&cData for this player hasn't loaded yet, try again later!"
+data-not-loaded-yet-self: "&cYour data isn't loaded yet, please try again later!"
+xp-added-feedback: "&a{amount} XP added to player {player}!"
+player-only-command: "&cThis command can only be executed by a player!"
+no-permission: "&cYou don't have permission to execute this command!"
+invalid-syntax: "&cInvalid command syntax!"
+must-be-number: "&cArgument must be a number!"
+player-not-found: "&cPlayer not found!"
+command-error: "&cAn error occurred while executing this command!"
+
+config-version: 0

@@ -1,0 +1,43 @@
+title: "Milestones"
+
+display-area: [
+  10, 11, 12, 13, 14, 15, 16,
+  19, 20, 21, 22, 23, 24, 25,
+  28, 29, 30, 31, 32, 33, 34
+]
+
+items:
+  filler:
+    enabled: true
+    item:
+      name: " "
+      material: BLACK_STAINED_GLASS_PANE
+  # These are only visible if it makes sense (page count > 1)
+  previous-page:
+    name: "&7Previous page"
+    material: ARROW
+    slot: 48
+  current-page:
+    name: "{current}/{max} page"
+    material: NETHER_STAR
+    slot: 49
+  next-page:
+    name: "&7Next page"
+    material: ARROW
+    slot: 50
+
+custom-items:
+  close:
+    name: "&cClose"
+    material: BARRIER
+    slot: 53
+    on-left-click:
+      - "[close]"
+  back:
+    name: "&7Back"
+    material: ARROW
+    slot: 45
+    on-left-click:
+      - "[player] level"
+
+config-version: 0

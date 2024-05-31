@@ -1,0 +1,98 @@
+debug: false
+
+# Main leveling curve
+xp-formula: "10 + (level - 1) * 10 + (level - 1) * (level - 1) * 2"
+
+language: en
+
+# These can be used in the rewards and in menu templates
+# Can be any name you want
+# You can reference it like {name} in rewards, menus, messages, etc. (eg: {money} for this example)
+# If you want a whole number, you can use it like this {name_int} (eg: {money_int})
+# If you want a formatted number, you can use it like this {name_formatted} (useful for displays)
+# These numbers are automatically formatted in menus and messages with the base Aurora plugin number format settings
+# Result must be a number, therefore boolean operators are not allowed
+formula-placeholders:
+  money: "1000 + 1000 * (level - 1) * 20 / 100"
+
+# Always keep at least one alias for each command
+command-aliases:
+  level: ["level", "levels", "lvl"]
+  milestones: ["milestones", "milestone"]
+  setraw: ["setraw"]
+  set: ["set"]
+  addxp: ["addxp"]
+
+# Read wiki or try it out before changing this
+display-components:
+  rewards:
+    title: "  &7Rewards:&r"
+    line: "    {reward}"
+
+level-up-message:
+  enabled: true
+  message:
+    - "&3&m----------------------------------------&r"
+    - ' '
+    - "  &f&lYou levelled up &8[ &r&7{prev_level} -> &6&l{level} &8]&r"
+    - ' '
+    - "component:rewards"
+    - ' '
+    - "&3&m----------------------------------------"
+
+level-up-title:
+  enabled: true
+  title: "&6Level up!"
+  subtitle: "&7You are now level &6{level}"
+
+xp-gain-action-bar:
+  enabled: true
+  message: "&fYou gained &6{amount} &fplayer level XP"
+
+level-up-sound:
+  enabled: true
+  sound: "ENTITY_PLAYER_LEVELUP"
+  volume: 1
+  pitch: 1
+
+# You can create as many matchers as you want with different names, intervals, priorities and rewards
+level-matchers:
+  # Do not delete the default matcher
+  # You can modify it if you want, but keep the interval at 1
+  # and the priority at 0, so it will match every level
+  default:
+    interval: 1
+    priority: 0
+    rewards:
+      my-money-reward:
+        type: money
+        formula: "{money}"
+        display: "&8+&a{value_formatted}"
+  # On every 5th level this will override the default matcher
+  # since it has a higher priority
+  every5:
+    interval: 5
+    priority: 1
+    rewards:
+      my-command-reward:
+        type: command
+        command: "[console] eco give {player} {money}"
+        display: "&8+&a{money_formatted}"
+
+# Key must be the level number
+# You can add custom rewards to certain levels
+# This will be the highest priority
+custom-levels:
+  25:
+    rewards:
+      my-money-reward:
+        type: money
+        formula: "{money} * 2"
+        display: "&8+&a{value_formatted}$"
+#      stat-reward:
+#        type: auraskills_stat
+#        stat: strength
+#        amount: 3
+#        display: "&8+&43 {symbol} {stat}"
+
+config-version: 0
