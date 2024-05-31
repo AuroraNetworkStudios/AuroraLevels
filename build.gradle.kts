@@ -85,7 +85,11 @@ publishing {
     repositories {
         maven {
             name = "AuroraMC"
-            url = URI.create("https://repo.auroramc.gg/repository/maven-releases/")
+            url = if (version.toString().endsWith("SNAPSHOT")) {
+                URI.create("https://repo.auroramc.gg/repository/maven-snapshots/")
+            } else {
+                URI.create("https://repo.auroramc.gg/repository/maven-releases/")
+            }
             credentials {
                 username = publishing.getProperty("username")
                 password = publishing.getProperty("password")
