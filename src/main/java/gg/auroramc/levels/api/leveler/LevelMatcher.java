@@ -15,9 +15,9 @@ public class LevelMatcher {
     private final Leveler leveler;
     private final AuroraLevels plugin;
 
-    public LevelMatcher(AuroraLevels plugin) {
+    public LevelMatcher(AuroraLevels plugin, Leveler leveler) {
         this.plugin = plugin;
-        this.leveler = plugin.getLeveler();
+        this.leveler = leveler;
         reload();
     }
 

@@ -49,7 +49,7 @@ public class PlayerLeveler implements Leveler, Listener {
     public PlayerLeveler(AuroraLevels plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
-        this.levelMatcher.set(new LevelMatcher(plugin));
+        this.levelMatcher.set(new LevelMatcher(plugin, this));
         registerRewardCorrector("command", new CommandCorrector(plugin));
 
         reload(true);
