@@ -79,6 +79,8 @@ public class PlayerLeveler implements Leveler, Listener {
         }
 
         levelXPCache.clear();
+        formulaCache.clear();
+
         if (!first) {
             levelMatcher.get().reload();
         }
