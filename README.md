@@ -4,6 +4,8 @@ Highly customizable and feature-rich global player leveling plugin for Paper ser
 Give your player XP to level up via commands and plugin integrations, and reward them with money, items, permissions, 
 or even custom rewards.
 
+You can view the full documentation [here](https://docs.auroramc.gg/auroralevels).
+
 ## Features:
 - Template based leveling system, so you don't need to configure all day long
 - Multiple reward types and integrations
