@@ -5,14 +5,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 public class HookManager {
-        public static void registerHooks() {
+        public static void registerHooks(AuroraLevels plugin) {
             for (var hook : Hooks.values()) {
                 try {
                     if(Bukkit.getPluginManager().isPluginEnabled(hook.getPlugin())) {
                         var instance = hook.getClazz().getDeclaredConstructor().newInstance();
-                        instance.hook(AuroraLevels.getInstance());
+                        instance.hook(plugin);
                         if(instance instanceof Listener) {
-                            Bukkit.getPluginManager().registerEvents((Listener) instance, AuroraLevels.getInstance());
+                            Bukkit.getPluginManager().registerEvents((Listener) instance, plugin);
                         }
                     }
                 } catch (Exception e) {

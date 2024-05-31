@@ -12,13 +12,15 @@ import java.util.List;
 import java.util.Locale;
 
 public class CommandManager {
+    private final AuroraLevels plugin;
     private final PaperCommandManager commandManager;
     private final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacyAmpersand().toBuilder()
             .hexColors().useUnusualXRepeatedCharacterHexFormat().build();
     private boolean hasSetup = false;
 
-    public CommandManager() {
-        this.commandManager = new PaperCommandManager(AuroraLevels.getInstance());
+    public CommandManager(AuroraLevels plugin) {
+        this.commandManager = new PaperCommandManager(plugin);
+        this.plugin = plugin;
     }
 
     private void setupCommands() {
@@ -26,7 +28,7 @@ public class CommandManager {
             commandManager.getLocales().setDefaultLocale(Locale.ENGLISH);
             commandManager.usePerIssuerLocale(false);
 
-            var aliases = AuroraLevels.getInstance().getConfigManager().getLevelConfig().getCommandAliases();
+            var aliases = plugin.getConfigManager().getLevelConfig().getCommandAliases();
 
             commandManager.getCommandReplacements().addReplacement("levelAlias", a(aliases.getLevel()));
             commandManager.getCommandReplacements().addReplacement("milestonesAlias", a(aliases.getMilestones()));
@@ -35,7 +37,7 @@ public class CommandManager {
             commandManager.getCommandReplacements().addReplacement("addxpAlias", a(aliases.getAddxp()));
         }
 
-        var msg = AuroraLevels.getInstance().getConfigManager().getMessageConfig();
+        var msg = plugin.getConfigManager().getMessageConfig();
         commandManager.getLocales().addMessage(Locale.ENGLISH, MinecraftMessageKeys.NO_PLAYER_FOUND, m(msg.getPlayerNotFound()));
         commandManager.getLocales().addMessage(Locale.ENGLISH, MinecraftMessageKeys.NO_PLAYER_FOUND_OFFLINE, m(msg.getPlayerNotFound()));
         commandManager.getLocales().addMessage(Locale.ENGLISH, MinecraftMessageKeys.NO_PLAYER_FOUND_SERVER, m(msg.getPlayerNotFound()));
@@ -50,7 +52,7 @@ public class CommandManager {
         commandManager.getLocales().addMessage(Locale.ENGLISH, MessageKeys.NOT_ALLOWED_ON_CONSOLE, m(msg.getPlayerOnlyCommand()));
 
         if (!this.hasSetup) {
-            this.commandManager.registerCommand(new LevelCommand(AuroraLevels.getInstance()));
+            this.commandManager.registerCommand(new LevelCommand(plugin));
             this.hasSetup = true;
         }
     }

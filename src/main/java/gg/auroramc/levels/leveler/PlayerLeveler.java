@@ -16,6 +16,7 @@ import gg.auroramc.levels.api.event.PlayerXpGainEvent;
 import gg.auroramc.levels.api.reward.RewardCorrector;
 import gg.auroramc.levels.reward.CommandReward;
 import gg.auroramc.levels.reward.MoneyReward;
+import gg.auroramc.levels.reward.corrector.CommandCorrector;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -48,7 +49,8 @@ public class PlayerLeveler implements Leveler, Listener {
     public PlayerLeveler(AuroraLevels plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
-        this.levelMatcher.set(new LevelMatcher(this));
+        this.levelMatcher.set(new LevelMatcher(plugin));
+        registerRewardCorrector("command", new CommandCorrector(plugin));
 
         reload(true);
     }
@@ -99,7 +101,7 @@ public class PlayerLeveler implements Leveler, Listener {
 
         if (newXP < requiredXpToLevelUp) {
             data.setCurrentXP(newXP);
-            Bukkit.getGlobalRegionScheduler().run(AuroraLevels.getInstance(),
+            Bukkit.getGlobalRegionScheduler().run(plugin,
                     (task) -> Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(player, xp)));
             return;
         }
@@ -112,11 +114,11 @@ public class PlayerLeveler implements Leveler, Listener {
             requiredXpToLevelUp = getRequiredXpForLevelUp(player);
 
             rewardPlayer(player, data.getLevel());
-            Bukkit.getGlobalRegionScheduler().run(AuroraLevels.getInstance(),
+            Bukkit.getGlobalRegionScheduler().run(plugin,
                     (task) -> Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, data.getLevel())));
         }
 
-        Bukkit.getGlobalRegionScheduler().run(AuroraLevels.getInstance(),
+        Bukkit.getGlobalRegionScheduler().run(plugin,
                 (task) -> Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(player, xp)));
     }
 
@@ -201,7 +203,7 @@ public class PlayerLeveler implements Leveler, Listener {
 
         if (data.getLevel() > level) {
             data.setLevel(level);
-            Bukkit.getGlobalRegionScheduler().run(AuroraLevels.getInstance(),
+            Bukkit.getGlobalRegionScheduler().run(plugin,
                     (task) -> Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, level)));
             return;
         }
@@ -209,7 +211,7 @@ public class PlayerLeveler implements Leveler, Listener {
         for (long l = data.getLevel() + 1; l <= level; l++) {
             data.setLevel(l);
             rewardPlayer(player, l);
-            Bukkit.getGlobalRegionScheduler().run(AuroraLevels.getInstance(),
+            Bukkit.getGlobalRegionScheduler().run(plugin,
                     (task) -> Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, level)));
         }
     }

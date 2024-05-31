@@ -29,25 +29,25 @@ public class MessageConfig extends AuroraConfig {
     private String playerNotFound = "&cPlayer not found!";
     private String commandError = "&cAn error occurred while executing this command!";
 
-    public MessageConfig(String language) {
-        super(getFile(language));
+    public MessageConfig(AuroraLevels plugin, String language) {
+        super(getFile(plugin, language));
     }
 
-    private static File getFile(String language) {
-        return new File(AuroraLevels.getInstance().getDataFolder(), "messages_" + language + ".yml");
+    private static File getFile(AuroraLevels plugin, String language) {
+        return new File(plugin.getDataFolder(), "messages_" + language + ".yml");
     }
 
-    public static void saveDefault(String language) {
-        if (!getFile(language).exists()) {
+    public static void saveDefault(AuroraLevels plugin, String language) {
+        if (!getFile(plugin, language).exists()) {
             try {
-                AuroraLevels.getInstance().saveResource("messages_" + language + ".yml", false);
+                plugin.saveResource("messages_" + language + ".yml", false);
             } catch (Exception e) {
                 AuroraLevels.logger().warning("Internal message file for language: " + language + " not found! Creating a new one from english...");
 
-                var file = getFile(language);
+                var file = getFile(plugin, language);
 
 
-                try (InputStream in = AuroraLevels.getInstance().getResource("messages_en.yml")) {
+                try (InputStream in = plugin.getResource("messages_en.yml")) {
                     Files.copy(in, file.toPath());
                 } catch (IOException ex) {
                     AuroraLevels.logger().severe("Failed to create message file for language: " + language);

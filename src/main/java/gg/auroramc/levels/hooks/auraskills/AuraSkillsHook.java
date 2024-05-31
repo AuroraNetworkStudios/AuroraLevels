@@ -7,6 +7,6 @@ public class AuraSkillsHook implements Hook {
     @Override
     public void hook(AuroraLevels plugin) {
         plugin.getLeveler().registerRewardType("auraskills_stat", AuraSkillsStatReward.class);
-        plugin.getLeveler().registerRewardCorrector("auraskills_stat", new AuraSkillsCorrector());
+        plugin.getLeveler().registerRewardCorrector("auraskills_stat", new AuraSkillsCorrector(plugin));
     }
 }

@@ -6,7 +6,7 @@ import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.aurora.api.message.Text;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.leveler.Matcher;
+import gg.auroramc.levels.api.leveler.Matcher;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,8 +20,10 @@ public class MilestonesMenu {
     private final static NamespacedId menuId = NamespacedId.fromDefault("milestones_menu");
     private final Player player;
     private int page = 0;
+    private final AuroraLevels plugin;
 
-    public MilestonesMenu(Player player) {
+    public MilestonesMenu(AuroraLevels plugin, Player player) {
+        this.plugin = plugin;
         this.player = player;
     }
 
@@ -30,10 +32,10 @@ public class MilestonesMenu {
     }
 
     private AuroraMenu createMenu() {
-        var leveler = AuroraLevels.getInstance().getLeveler();
-        var menuConfig = AuroraLevels.getInstance().getConfigManager().getMilestoneMenuConfig();
-        var lvlMenuConfig = AuroraLevels.getInstance().getConfigManager().getLevelMenuConfig();
-        var lvlConfig = AuroraLevels.getInstance().getConfigManager().getLevelConfig();
+        var leveler = plugin.getLeveler();
+        var menuConfig = plugin.getConfigManager().getMilestoneMenuConfig();
+        var lvlMenuConfig = plugin.getConfigManager().getLevelMenuConfig();
+        var lvlConfig = plugin.getConfigManager().getLevelConfig();
 
         var menu = new AuroraMenu(player, menuConfig.getTitle(), 54, false, menuId);
 
@@ -128,13 +130,13 @@ public class MilestonesMenu {
     }
 
     private List<Map.Entry<Long, Matcher>> getPage(int page, int pageSize) {
-        return AuroraLevels.getInstance().getLeveler().getLevelMatcher().getCustomMatchers().entrySet()
+        return plugin.getLeveler().getLevelMatcher().getCustomMatchers().entrySet()
                 .stream().sorted(Map.Entry.comparingByKey())
                 .skip((long) page * pageSize).limit(pageSize).toList();
     }
 
     private int getTotalPageCount(int pageSize) {
-        var levelMatcher = AuroraLevels.getInstance().getLeveler().getLevelMatcher();
+        var levelMatcher = plugin.getLeveler().getLevelMatcher();
         return (int) Math.ceil((double) levelMatcher.getCustomMatchers().size() / pageSize) - 1;
     }
 }

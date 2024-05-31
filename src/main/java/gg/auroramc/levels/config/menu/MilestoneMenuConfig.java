@@ -30,17 +30,17 @@ public class MilestoneMenuConfig extends AuroraConfig {
         private ItemConfig item;
     }
 
-    public MilestoneMenuConfig() {
-        super(getFile());
+    public MilestoneMenuConfig(AuroraLevels plugin) {
+        super(getFile(plugin));
     }
 
-    private static File getFile() {
-        return new File(AuroraLevels.getInstance().getDataFolder(), "menus/milestones.yml");
+    private static File getFile(AuroraLevels plugin) {
+        return new File(plugin.getDataFolder(), "menus/milestones.yml");
     }
 
-    public static void saveDefault() {
-        if (!getFile().exists()) {
-            AuroraLevels.getInstance().saveResource("menus/milestones.yml", false);
+    public static void saveDefault(AuroraLevels plugin) {
+        if (!getFile(plugin).exists()) {
+            plugin.saveResource("menus/milestones.yml", false);
         }
     }
 }

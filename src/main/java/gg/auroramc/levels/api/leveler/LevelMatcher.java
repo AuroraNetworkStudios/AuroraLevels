@@ -3,8 +3,6 @@ package gg.auroramc.levels.api.leveler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.leveler.Matcher;
-import gg.auroramc.levels.leveler.PlayerLeveler;
 import lombok.Getter;
 
 import java.util.List;
@@ -15,14 +13,15 @@ public class LevelMatcher {
     private final List<Matcher> matchers = Lists.newCopyOnWriteArrayList();
     private final Map<Long, Matcher> customMatchers = Maps.newConcurrentMap();
     private final Leveler leveler;
+    private final AuroraLevels plugin;
 
-    public LevelMatcher(Leveler leveler) {
-        this.leveler = leveler;
+    public LevelMatcher(AuroraLevels plugin) {
+        this.plugin = plugin;
+        this.leveler = plugin.getLeveler();
         reload();
     }
 
     public void reload() {
-        var plugin = AuroraLevels.getInstance();
         var config = plugin.getConfigManager().getLevelConfig();
 
         matchers.clear();

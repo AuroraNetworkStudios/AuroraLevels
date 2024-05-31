@@ -14,6 +14,12 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class AuraSkillsCorrector implements RewardCorrector {
+    private final AuroraLevels plugin;
+
+    public AuraSkillsCorrector(AuroraLevels plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void correctRewards(Leveler leveler, Player player) {
         CompletableFuture.runAsync(() -> {
@@ -40,7 +46,7 @@ public class AuraSkillsCorrector implements RewardCorrector {
             }
 
             // I'm not sure if it's safe to call AuraSkills apis async, so lets just run it on the main thread
-            Bukkit.getGlobalRegionScheduler().run(AuroraLevels.getInstance(), (task) -> {
+            Bukkit.getGlobalRegionScheduler().run(plugin, (task) -> {
                 // Apply the new stat modifiers
                 for (var entry : statMap.entrySet()) {
                     var statKey = AuraSkillsStatReward.getAURA_SKILLS_STAT() + entry.getKey().getId().toString();

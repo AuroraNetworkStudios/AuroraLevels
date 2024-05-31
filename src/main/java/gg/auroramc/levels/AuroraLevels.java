@@ -3,7 +3,6 @@ package gg.auroramc.levels;
 import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.AuroraLogger;
 import gg.auroramc.levels.api.AuroraLevelsProvider;
-import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.command.CommandManager;
 import gg.auroramc.levels.config.ConfigManager;
 import gg.auroramc.levels.api.data.LevelData;
@@ -14,8 +13,6 @@ import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AuroraLevels extends JavaPlugin {
-    @Getter
-    private static AuroraLevels instance;
     @Getter
     private PlayerLeveler leveler;
     @Getter
@@ -30,13 +27,8 @@ public class AuroraLevels extends JavaPlugin {
     }
 
     @Override
-    public void onLoad() {
-        instance = this;
-    }
-
-    @Override
     public void onEnable() {
-        configManager = new ConfigManager();
+        configManager = new ConfigManager(this);
 
         l = AuroraAPI.createLogger("AuroraLevels", () -> configManager.getLevelConfig().getDebug());
         AuroraAPI.getUserManager().registerUserDataHolder(LevelData.class);
@@ -44,7 +36,7 @@ public class AuroraLevels extends JavaPlugin {
         leveler = new PlayerLeveler(this);
         AuroraAPI.registerPlaceholderHandler(new LevelPlaceholderHandler(leveler));
 
-        commandManager = new CommandManager();
+        commandManager = new CommandManager(this);
         commandManager.reload();
 
         try {
@@ -56,7 +48,7 @@ public class AuroraLevels extends JavaPlugin {
             e.printStackTrace();
         }
 
-        HookManager.registerHooks();
+        HookManager.registerHooks(this);
     }
 
     public void reload() {

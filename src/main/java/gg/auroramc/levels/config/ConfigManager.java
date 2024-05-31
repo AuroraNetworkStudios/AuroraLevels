@@ -1,5 +1,6 @@
 package gg.auroramc.levels.config;
 
+import gg.auroramc.levels.AuroraLevels;
 import gg.auroramc.levels.config.menu.LevelMenuConfig;
 import gg.auroramc.levels.config.menu.MilestoneMenuConfig;
 import lombok.Getter;
@@ -10,26 +11,28 @@ public class ConfigManager {
     private MessageConfig messageConfig;
     private LevelMenuConfig levelMenuConfig;
     private MilestoneMenuConfig milestoneMenuConfig;
+    private final AuroraLevels plugin;
 
-    public ConfigManager() {
+    public ConfigManager(AuroraLevels plugin) {
+        this.plugin = plugin;
         reload();
     }
 
     public void reload() {
-        LevelConfig.saveDefault();
-        levelConfig = new LevelConfig();
+        LevelConfig.saveDefault(plugin);
+        levelConfig = new LevelConfig(plugin);
         levelConfig.load();
 
-        MessageConfig.saveDefault(levelConfig.getLanguage());
-        messageConfig = new MessageConfig(levelConfig.getLanguage());
+        MessageConfig.saveDefault(plugin, levelConfig.getLanguage());
+        messageConfig = new MessageConfig(plugin, levelConfig.getLanguage());
         messageConfig.load();
 
-        LevelMenuConfig.saveDefault();
-        levelMenuConfig = new LevelMenuConfig();
+        LevelMenuConfig.saveDefault(plugin);
+        levelMenuConfig = new LevelMenuConfig(plugin);
         levelMenuConfig.load();
 
-        MilestoneMenuConfig.saveDefault();
-        milestoneMenuConfig = new MilestoneMenuConfig();
+        MilestoneMenuConfig.saveDefault(plugin);
+        milestoneMenuConfig = new MilestoneMenuConfig(plugin);
         milestoneMenuConfig.load();
 
         // Prevent showing rewards for level 0

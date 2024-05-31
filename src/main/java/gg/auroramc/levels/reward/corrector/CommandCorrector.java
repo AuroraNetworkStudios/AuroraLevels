@@ -12,6 +12,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class CommandCorrector implements RewardCorrector {
 
+    private final AuroraLevels plugin;
+
+    public CommandCorrector(AuroraLevels plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void correctRewards(Leveler leveler, Player player) {
         CompletableFuture.runAsync(() -> {
@@ -35,7 +41,7 @@ public class CommandCorrector implements RewardCorrector {
 
             if (rewards.isEmpty()) return;
 
-            Bukkit.getGlobalRegionScheduler().run(AuroraLevels.getInstance(), (task) -> {
+            Bukkit.getGlobalRegionScheduler().run(plugin, (task) -> {
                 rewards.forEach((lvl, reward) -> {
                     if (!player.isOnline()) return;
                     reward.execute(player, lvl, leveler.getRewardFormulaPlaceholders(player, lvl));

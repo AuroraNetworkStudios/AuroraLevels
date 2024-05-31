@@ -30,7 +30,7 @@ public class LevelCommand extends BaseCommand {
             Chat.sendMessage(player, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYetSelf());
             return;
         }
-        new LevelMenu(player).open();
+        new LevelMenu(plugin, player).open();
     }
 
     @Subcommand("%milestonesAlias")
@@ -41,7 +41,7 @@ public class LevelCommand extends BaseCommand {
             Chat.sendMessage(player, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYetSelf());
             return;
         }
-        new MilestonesMenu(player).open();
+        new MilestonesMenu(plugin, player).open();
     }
 
     @Subcommand("%setAlias")
@@ -116,9 +116,9 @@ public class LevelCommand extends BaseCommand {
             var invHolder = player.getOpenInventory().getTopInventory().getHolder();
             if (invHolder instanceof AuroraMenu menu) {
                 if (menu.getId().equals(LevelMenu.getMenuId())) {
-                    new LevelMenu(player).open();
+                    new LevelMenu(plugin, player).open();
                 } else if (menu.getId().equals(MilestonesMenu.getMenuId())) {
-                    new MilestonesMenu(player).open();
+                    new MilestonesMenu(plugin, player).open();
                 }
             }
         }

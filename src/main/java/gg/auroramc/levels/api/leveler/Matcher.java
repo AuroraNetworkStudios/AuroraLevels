@@ -1,6 +1,5 @@
-package gg.auroramc.levels.leveler;
+package gg.auroramc.levels.api.leveler;
 
-import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.api.reward.LevelReward;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;

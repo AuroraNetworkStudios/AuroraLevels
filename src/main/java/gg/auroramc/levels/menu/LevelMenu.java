@@ -19,8 +19,10 @@ public class LevelMenu {
     private final static NamespacedId menuId = NamespacedId.fromDefault("level_menu");
 
     private final Player player;
+    private final AuroraLevels plugin;
 
-    public LevelMenu(Player player) {
+    public LevelMenu(AuroraLevels plugin, Player player) {
+        this.plugin = plugin;
         this.player = player;
     }
 
@@ -29,8 +31,8 @@ public class LevelMenu {
     }
 
     private AuroraMenu createMenu() {
-        var leveler = AuroraLevels.getInstance().getLeveler();
-        var cfg = AuroraLevels.getInstance().getConfigManager();
+        var leveler = plugin.getLeveler();
+        var cfg = plugin.getConfigManager();
         var lvlConfig = cfg.getLevelConfig();
         var menuConfig = cfg.getLevelMenuConfig();
 

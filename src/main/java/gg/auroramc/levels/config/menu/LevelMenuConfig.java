@@ -46,17 +46,17 @@ public class LevelMenuConfig extends AuroraConfig {
     }
 
 
-    public LevelMenuConfig() {
-        super(getFile());
+    public LevelMenuConfig(AuroraLevels plugin) {
+        super(getFile(plugin));
     }
 
-    private static File getFile() {
-        return new File(AuroraLevels.getInstance().getDataFolder(), "menus/levels.yml");
+    private static File getFile(AuroraLevels plugin) {
+        return new File(plugin.getDataFolder(), "menus/levels.yml");
     }
 
-    public static void saveDefault() {
-        if (!getFile().exists()) {
-            AuroraLevels.getInstance().saveResource("menus/levels.yml", false);
+    public static void saveDefault(AuroraLevels plugin) {
+        if (!getFile(plugin).exists()) {
+            plugin.saveResource("menus/levels.yml", false);
         }
     }
 }

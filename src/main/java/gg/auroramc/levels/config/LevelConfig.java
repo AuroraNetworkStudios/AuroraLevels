@@ -78,17 +78,17 @@ public class LevelConfig extends AuroraConfig {
         private ConfigurationSection rewards;
     }
 
-    public LevelConfig() {
-        super(getFile());
+    public LevelConfig(AuroraLevels plugin) {
+        super(getFile(plugin));
     }
 
-    public static File getFile() {
-        return new File(AuroraLevels.getInstance().getDataFolder(), "config.yml");
+    public static File getFile(AuroraLevels plugin) {
+        return new File(plugin.getDataFolder(), "config.yml");
     }
 
-    public static void saveDefault() {
-        if (!getFile().exists()) {
-            AuroraLevels.getInstance().saveResource("config.yml", false);
+    public static void saveDefault(AuroraLevels plugin) {
+        if (!getFile(plugin).exists()) {
+            plugin.saveResource("config.yml", false);
         }
     }
 }
