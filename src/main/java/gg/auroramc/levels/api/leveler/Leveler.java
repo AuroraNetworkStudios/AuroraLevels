@@ -1,14 +1,11 @@
 package gg.auroramc.levels.api.leveler;
 
 import gg.auroramc.aurora.api.message.Placeholder;
-import gg.auroramc.levels.api.reward.LevelReward;
 import gg.auroramc.levels.api.reward.RewardCorrector;
 import gg.auroramc.levels.api.data.LevelData;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface Leveler {
     /**
@@ -18,22 +15,6 @@ public interface Leveler {
      * @param corrector     corrector to register
      */
     void registerRewardCorrector(String rewardType, RewardCorrector corrector);
-
-    /**
-     * Register a reward type
-     *
-     * @param rewardType    type of the reward
-     * @param clazz         class of the reward
-     */
-    void registerRewardType(String rewardType, Class<? extends LevelReward> clazz);
-
-    /**
-     * Create a reward from the given configuration
-     *
-     * @param args  configuration to create the reward from
-     * @return      created reward
-     */
-    Optional<LevelReward> createReward(ConfigurationSection args);
 
     /**
      * Get the level data of a player

@@ -30,7 +30,7 @@ public class CommandCorrector implements RewardCorrector {
                 var matcher = leveler.getLevelMatcher().getBestMatcher(i);
                 if (matcher == null) continue;
 
-                for (var reward : matcher.getRewards()) {
+                for (var reward : matcher.rewards()) {
                     if (reward instanceof CommandReward commandReward) {
                         if (commandReward.shouldBeCorrected(player, i)) {
                             rewards.put(i, commandReward);

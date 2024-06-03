@@ -6,11 +6,11 @@ import gg.auroramc.aurora.api.expression.NumberExpression;
 import gg.auroramc.aurora.api.message.ActionBar;
 import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.aurora.api.message.Text;
+import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
 import gg.auroramc.levels.api.data.LevelData;
 import gg.auroramc.levels.api.leveler.LevelMatcher;
 import gg.auroramc.levels.api.leveler.Leveler;
-import gg.auroramc.levels.api.reward.LevelReward;
 import gg.auroramc.levels.api.event.PlayerLevelUpEvent;
 import gg.auroramc.levels.api.event.PlayerXpGainEvent;
 import gg.auroramc.levels.api.reward.RewardCorrector;
@@ -21,12 +21,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,8 +37,7 @@ public class PlayerLeveler implements Leveler, Listener {
     private final Map<String, Map<Long, Double>> formulaCache = new ConcurrentHashMap<>();
     private final AtomicReference<LevelMatcher> levelMatcher = new AtomicReference<>();
     private final Map<String, RewardCorrector> rewardCorrectors = new ConcurrentHashMap<>();
-    private final Map<String, Class<? extends LevelReward>> rewardTypes = new ConcurrentHashMap<>(
-            Map.of("money", MoneyReward.class, "command", CommandReward.class));
+
 
     public LevelMatcher getLevelMatcher() {
         return levelMatcher.get();
@@ -49,7 +46,13 @@ public class PlayerLeveler implements Leveler, Listener {
     public PlayerLeveler(AuroraLevels plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
-        this.levelMatcher.set(new LevelMatcher(plugin, this));
+
+        var matcher = new LevelMatcher(plugin);
+        matcher.registerRewardType(NamespacedId.fromDefault("command"), CommandReward.class);
+        matcher.registerRewardType(NamespacedId.fromDefault("money"), MoneyReward.class);
+
+        this.levelMatcher.set(matcher);
+
         registerRewardCorrector("command", new CommandCorrector(plugin));
 
         reload(true);
@@ -57,11 +60,6 @@ public class PlayerLeveler implements Leveler, Listener {
 
     public void registerRewardCorrector(String name, RewardCorrector corrector) {
         rewardCorrectors.put(name, corrector);
-    }
-
-    @Override
-    public void registerRewardType(String rewardType, Class<? extends LevelReward> clazz) {
-        rewardTypes.put(rewardType, clazz);
     }
 
     public void reload() {
@@ -154,7 +152,7 @@ public class PlayerLeveler implements Leveler, Listener {
 
         var matcher = levelMatcher.get().getBestMatcher(level);
 
-        for (var reward : matcher.getRewards()) {
+        for (var reward : matcher.rewards()) {
             reward.execute(player, level, placeholders);
         }
 
@@ -173,10 +171,10 @@ public class PlayerLeveler implements Leveler, Listener {
 
             for (var line : messageLines) {
                 if (line.equals("component:rewards")) {
-                    if (!matcher.getRewards().isEmpty()) {
+                    if (!matcher.rewards().isEmpty()) {
                         text.append(Text.component(player, config.getDisplayComponents().get("rewards").getTitle(), placeholders));
                     }
-                    for (var reward : matcher.getRewards()) {
+                    for (var reward : matcher.rewards()) {
                         text.append(Component.newline());
                         var display = config.getDisplayComponents().get("rewards").getLine().replace("{reward}", reward.getDisplay(player, placeholders));
                         text.append(Text.component(player, display, placeholders));
@@ -244,25 +242,6 @@ public class PlayerLeveler implements Leveler, Listener {
     public void correctRewards(Player player) {
         for (var corrector : rewardCorrectors.values()) {
             corrector.correctRewards(this, player);
-        }
-    }
-
-    @Override
-    public Optional<LevelReward> createReward(ConfigurationSection args) {
-        if (args == null) return Optional.empty();
-        var type = args.getString("type", "command").toLowerCase(Locale.ROOT);
-        LevelReward reward;
-
-        try {
-            var clazz = rewardTypes.get(type);
-            if (clazz == null) return Optional.empty();
-            reward = clazz.getDeclaredConstructor().newInstance();
-            reward.init(args);
-            return Optional.of(reward);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            AuroraLevels.logger().warning("Failed to create reward of type " + type + ": " + e.getMessage());
-            return Optional.empty();
         }
     }
 

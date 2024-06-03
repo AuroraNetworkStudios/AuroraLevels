@@ -86,7 +86,7 @@ public class LevelMenu {
             for (var line : itemConfig.getLore()) {
                 if (line.equals("component:rewards")) {
                     var display = menuConfig.getDisplayComponents().get("rewards");
-                    var rewards = leveler.getLevelMatcher().getBestMatcher(iteratorLevel).getRewards();
+                    var rewards = leveler.getLevelMatcher().getBestMatcher(iteratorLevel).rewards();
                     if (!rewards.isEmpty()) {
                         lore.add(display.getTitle());
                     }

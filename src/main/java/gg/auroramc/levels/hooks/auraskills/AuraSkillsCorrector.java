@@ -38,7 +38,7 @@ public class AuraSkillsCorrector implements RewardCorrector {
                 var matcher = leveler.getLevelMatcher().getBestMatcher(i);
                 if (matcher == null) continue;
                 var formulaPlaceholders = leveler.getRewardFormulaPlaceholders(player, i);
-                for (var reward : matcher.getRewards()) {
+                for (var reward : matcher.rewards()) {
                     if (reward instanceof AuraSkillsStatReward statReward) {
                         statMap.merge(statReward.getStat(), statReward.getValue(formulaPlaceholders), Double::sum);
                     }

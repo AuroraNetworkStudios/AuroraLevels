@@ -89,10 +89,10 @@ custom-levels:
         type: money
         formula: "{money} * 2"
         display: "&8+&a{value_formatted}$"
-#      stat-reward:
-#        type: auraskills_stat
-#        stat: strength
-#        amount: 3
-#        display: "&8+&43 {symbol} {stat}"
+      stat-reward:
+        type: auraskills_stat
+        stat: strength
+        amount: 3
+        display: "&8+&43 {symbol} {stat}"
 
 config-version: 0

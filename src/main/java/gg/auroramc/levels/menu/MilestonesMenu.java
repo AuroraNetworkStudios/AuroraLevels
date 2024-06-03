@@ -60,7 +60,7 @@ public class MilestonesMenu {
             }
 
             var milestone = customLevels.get(i);
-            var rewards = milestone.getValue().getRewards();
+            var rewards = milestone.getValue().rewards();
             var milestoneLevel = milestone.getKey();
 
 
