@@ -67,13 +67,14 @@ public class PlayerLeveler implements Leveler, Listener {
     }
 
     public void reload(boolean first) {
-        var xpFormula = new NumberExpression(plugin.getConfigManager().getLevelConfig().getXpFormula().replace("{level}", "level"), "level");
+        var config = plugin.getConfigManager().getLevelConfig();
+        var xpFormula = new NumberExpression(config.getXpFormula().replace("{level}", "level"), "level");
         this.xpFormula.set(xpFormula);
 
         formulas.clear();
 
-        for (var formula : plugin.getConfigManager().getLevelConfig().getFormulaPlaceholders().entrySet()) {
-            formulas.put(formula.getKey(), new NumberExpression(formula.getValue(), "level"));
+        for (var formula : config.getFormulaPlaceholders().entrySet()) {
+            formulas.put(formula.getKey(), new NumberExpression(formula.getValue().replace("{level}", "level"), "level"));
         }
 
         levelXPCache.clear();
@@ -133,6 +134,7 @@ public class PlayerLeveler implements Leveler, Listener {
             formulaPlaceholders.add(Placeholder.of("{" + formula.getKey() + "_formatted}", AuroraAPI.formatNumber(value)));
         }
 
+        formulaPlaceholders.add(Placeholder.of("{player}", player.getName()));
         formulaPlaceholders.add(Placeholder.of("{level}", level));
         formulaPlaceholders.add(Placeholder.of("{level_int}", level));
         formulaPlaceholders.add(Placeholder.of("{level_formatted}", AuroraAPI.formatNumber(level)));
