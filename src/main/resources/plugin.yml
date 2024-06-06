@@ -13,7 +13,7 @@ softdepend:
   - "PlaceholderAPI"
 
 permissions:
-  aurora.level.*:
+  aurora.levels.*:
     children:
       aurora.levels.use:
         default: true
