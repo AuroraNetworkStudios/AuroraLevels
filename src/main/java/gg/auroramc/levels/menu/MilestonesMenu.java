@@ -103,7 +103,7 @@ public class MilestonesMenu {
         var pageCount = getTotalPageCount(menuConfig.getDisplayArea().size());
 
         if (leveler.getLevelMatcher().getCustomMatchers().size() > menuConfig.getDisplayArea().size()) {
-            List<Placeholder<?>> placeholders = List.of(Placeholder.of("{current%", page + 1), Placeholder.of("%max}", pageCount + 1));
+            List<Placeholder<?>> placeholders = List.of(Placeholder.of("{current}", page + 1), Placeholder.of("{max}", pageCount + 1));
 
             menu.addItem(ItemBuilder.of(menuConfig.getItems().getPreviousPage()).defaultSlot(48).placeholder(placeholders).build(player),
                     (e) -> {
