@@ -3,20 +3,19 @@ package gg.auroramc.levels.leveler;
 import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.events.user.AuroraUserLoadedEvent;
 import gg.auroramc.aurora.api.expression.NumberExpression;
+import gg.auroramc.aurora.api.levels.MatcherManager;
+import gg.auroramc.aurora.api.reward.*;
 import gg.auroramc.aurora.api.message.ActionBar;
 import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.aurora.api.message.Text;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
 import gg.auroramc.levels.api.data.LevelData;
-import gg.auroramc.levels.api.leveler.LevelMatcher;
 import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.api.event.PlayerLevelUpEvent;
 import gg.auroramc.levels.api.event.PlayerXpGainEvent;
-import gg.auroramc.levels.api.reward.RewardCorrector;
-import gg.auroramc.levels.reward.CommandReward;
-import gg.auroramc.levels.reward.MoneyReward;
 import gg.auroramc.levels.reward.corrector.CommandCorrector;
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -32,14 +31,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PlayerLeveler implements Leveler, Listener {
     private final AuroraLevels plugin;
     private final AtomicReference<NumberExpression> xpFormula = new AtomicReference<>();
-    private final Map<Long, Double> levelXPCache = new ConcurrentHashMap<>();
+    private final Map<Integer, Double> levelXPCache = new ConcurrentHashMap<>();
     private final Map<String, NumberExpression> formulas = new ConcurrentHashMap<>();
-    private final Map<String, Map<Long, Double>> formulaCache = new ConcurrentHashMap<>();
-    private final AtomicReference<LevelMatcher> levelMatcher = new AtomicReference<>();
-    private final Map<String, RewardCorrector> rewardCorrectors = new ConcurrentHashMap<>();
+    private final Map<String, Map<Integer, Double>> formulaCache = new ConcurrentHashMap<>();
+    private final AtomicReference<MatcherManager> levelMatcher = new AtomicReference<>();
+    @Getter
+    private final RewardFactory rewardFactory = new RewardFactory();
+    @Getter
+    private final RewardAutoCorrector rewardAutoCorrector = new RewardAutoCorrector();
 
 
-    public LevelMatcher getLevelMatcher() {
+    public MatcherManager getLevelMatcher() {
         return levelMatcher.get();
     }
 
@@ -47,23 +49,15 @@ public class PlayerLeveler implements Leveler, Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
 
-        var matcher = new LevelMatcher(plugin);
-        matcher.registerRewardType(NamespacedId.fromDefault("command"), CommandReward.class);
-        matcher.registerRewardType(NamespacedId.fromDefault("money"), MoneyReward.class);
+        rewardFactory.registerRewardType(NamespacedId.fromDefault("command"), CommandReward.class);
+        rewardFactory.registerRewardType(NamespacedId.fromDefault("money"), MoneyReward.class);
 
-        this.levelMatcher.set(matcher);
 
-        registerRewardCorrector("command", new CommandCorrector(plugin));
+        this.levelMatcher.set(new MatcherManager(rewardFactory));
+
+        rewardAutoCorrector.registerCorrector(NamespacedId.fromDefault("command"), new CommandCorrector(plugin));
 
         reload(true);
-    }
-
-    public void registerRewardCorrector(String name, RewardCorrector corrector) {
-        rewardCorrectors.put(name, corrector);
-    }
-
-    public void reload() {
-        reload(false);
     }
 
     public void reload(boolean first) {
@@ -80,8 +74,8 @@ public class PlayerLeveler implements Leveler, Listener {
         levelXPCache.clear();
         formulaCache.clear();
 
-        if (!first) {
-            levelMatcher.get().reload();
+        if(!first) {
+            levelMatcher.get().reload(config.getLevelMatchers(), config.getCustomLevels());
         }
     }
 
@@ -123,7 +117,7 @@ public class PlayerLeveler implements Leveler, Listener {
                 (task) -> Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(player, xp)));
     }
 
-    public List<Placeholder<?>> getRewardFormulaPlaceholders(Player player, long level) {
+    public List<Placeholder<?>> getRewardFormulaPlaceholders(Player player, int level) {
         var config = plugin.getConfigManager().getLevelConfig();
         var formulaPlaceholders = new ArrayList<Placeholder<?>>();
 
@@ -142,7 +136,7 @@ public class PlayerLeveler implements Leveler, Listener {
         return formulaPlaceholders;
     }
 
-    private void rewardPlayer(Player player, long level) {
+    private void rewardPlayer(Player player, int level) {
         var config = plugin.getConfigManager().getLevelConfig();
 
 
@@ -153,8 +147,9 @@ public class PlayerLeveler implements Leveler, Listener {
         placeholders.add(Placeholder.of("{prev_level_formatted}", AuroraAPI.formatNumber(level - 1)));
 
         var matcher = levelMatcher.get().getBestMatcher(level);
+        var rewards = matcher.computeRewards(level);
 
-        for (var reward : matcher.rewards()) {
+        for (var reward : rewards) {
             reward.execute(player, level, placeholders);
         }
 
@@ -173,10 +168,10 @@ public class PlayerLeveler implements Leveler, Listener {
 
             for (var line : messageLines) {
                 if (line.equals("component:rewards")) {
-                    if (!matcher.rewards().isEmpty()) {
+                    if (!rewards.isEmpty()) {
                         text.append(Text.component(player, config.getDisplayComponents().get("rewards").getTitle(), placeholders));
                     }
-                    for (var reward : matcher.rewards()) {
+                    for (var reward : rewards) {
                         text.append(Component.newline());
                         var display = config.getDisplayComponents().get("rewards").getLine().replace("{reward}", reward.getDisplay(player, placeholders));
                         text.append(Text.component(player, display, placeholders));
@@ -198,7 +193,7 @@ public class PlayerLeveler implements Leveler, Listener {
         }
     }
 
-    public void setPlayerLevel(Player player, long level) {
+    public void setPlayerLevel(Player player, int level) {
         var data = getUserData(player);
         data.setCurrentXP(0);
         if (data.getLevel() == level) return;
@@ -210,7 +205,7 @@ public class PlayerLeveler implements Leveler, Listener {
             return;
         }
 
-        for (long l = data.getLevel() + 1; l <= level; l++) {
+        for (int l = data.getLevel() + 1; l <= level; l++) {
             data.setLevel(l);
             rewardPlayer(player, l);
             Bukkit.getGlobalRegionScheduler().run(plugin,
@@ -218,18 +213,18 @@ public class PlayerLeveler implements Leveler, Listener {
         }
     }
 
-    public void setPlayerLevelRaw(Player player, long level) {
+    public void setPlayerLevelRaw(Player player, int level) {
         var data = getUserData(player);
         data.setCurrentXP(0);
         data.setLevel(level);
     }
 
-    public double getXpForLevel(long level) {
+    public double getXpForLevel(int level) {
         return levelXPCache.computeIfAbsent(level,
                 (l) -> xpFormula.get().evaluate(Placeholder.of("level", l)));
     }
 
-    public double getFormulaValueForLevel(String formula, long level) {
+    public double getFormulaValueForLevel(String formula, int level) {
         return formulaCache.computeIfAbsent(formula, (f) -> new ConcurrentHashMap<>())
                 .computeIfAbsent(level, (l) -> formulas.get(formula).evaluate(Placeholder.of("level", l)));
     }
@@ -241,16 +236,10 @@ public class PlayerLeveler implements Leveler, Listener {
         return nextLevelXP - currentLevelXP;
     }
 
-    public void correctRewards(Player player) {
-        for (var corrector : rewardCorrectors.values()) {
-            corrector.correctRewards(this, player);
-        }
-    }
-
     @EventHandler
     public void onUserLoaded(AuroraUserLoadedEvent event) {
         var player = event.getUser().getPlayer();
         if (player == null) return;
-        correctRewards(player);
+        rewardAutoCorrector.correctRewards(player);
     }
 }

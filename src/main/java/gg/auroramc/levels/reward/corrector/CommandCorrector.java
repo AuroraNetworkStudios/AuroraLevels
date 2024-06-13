@@ -1,9 +1,8 @@
 package gg.auroramc.levels.reward.corrector;
 
+import gg.auroramc.aurora.api.reward.CommandReward;
+import gg.auroramc.aurora.api.reward.RewardCorrector;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.api.leveler.Leveler;
-import gg.auroramc.levels.api.reward.RewardCorrector;
-import gg.auroramc.levels.reward.CommandReward;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -19,18 +18,19 @@ public class CommandCorrector implements RewardCorrector {
     }
 
     @Override
-    public void correctRewards(Leveler leveler, Player player) {
+    public void correctRewards(Player player) {
         CompletableFuture.runAsync(() -> {
+            var leveler = plugin.getLeveler();
             var data = leveler.getUserData(player);
             var level = data.getLevel();
 
-            final var rewards = new HashMap<Long, CommandReward>();
+            final var rewards = new HashMap<Integer, CommandReward>();
 
-            for (long i = 1; i < level + 1; i++) {
+            for (int i = 1; i < level + 1; i++) {
                 var matcher = leveler.getLevelMatcher().getBestMatcher(i);
                 if (matcher == null) continue;
 
-                for (var reward : matcher.rewards()) {
+                for (var reward : matcher.computeRewards(i)) {
                     if (reward instanceof CommandReward commandReward) {
                         if (commandReward.shouldBeCorrected(player, i)) {
                             rewards.put(i, commandReward);

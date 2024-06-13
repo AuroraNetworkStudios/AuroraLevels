@@ -34,8 +34,5 @@ public class ConfigManager {
         MilestoneMenuConfig.saveDefault(plugin);
         milestoneMenuConfig = new MilestoneMenuConfig(plugin);
         milestoneMenuConfig.load();
-
-        // Prevent showing rewards for level 0
-        levelConfig.getCustomLevels().put(0L, new LevelConfig.CustomLevel());
     }
 }

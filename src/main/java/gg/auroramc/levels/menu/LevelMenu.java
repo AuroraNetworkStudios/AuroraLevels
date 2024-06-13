@@ -33,7 +33,6 @@ public class LevelMenu {
     private AuroraMenu createMenu() {
         var leveler = plugin.getLeveler();
         var cfg = plugin.getConfigManager();
-        var lvlConfig = cfg.getLevelConfig();
         var menuConfig = cfg.getLevelMenuConfig();
 
         var menu = new AuroraMenu(player, menuConfig.getTitle(), 54, false, menuId);
@@ -44,13 +43,13 @@ public class LevelMenu {
             menu.addFiller(ItemBuilder.filler(Material.AIR));
         }
 
-        long level = leveler.getUserData(player).getLevel();
+        int level = leveler.getUserData(player).getLevel();
 
         for (var customItem : menuConfig.getCustomItems().values()) {
             menu.addItem(ItemBuilder.of(customItem).placeholder(Placeholder.of("{level}", level)).build(player));
         }
 
-        long iteratorLevel = level;
+        int iteratorLevel = level;
 
         for (var slot : menuConfig.getLevelTrack()) {
             var itemConfig = menuConfig.getItems().getLockedLevel();
@@ -86,7 +85,7 @@ public class LevelMenu {
             for (var line : itemConfig.getLore()) {
                 if (line.equals("component:rewards")) {
                     var display = menuConfig.getDisplayComponents().get("rewards");
-                    var rewards = leveler.getLevelMatcher().getBestMatcher(iteratorLevel).rewards();
+                    var rewards = leveler.getLevelMatcher().getBestMatcher(iteratorLevel).computeRewards(iteratorLevel);
                     if (!rewards.isEmpty()) {
                         lore.add(display.getTitle());
                     }

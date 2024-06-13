@@ -1,12 +1,13 @@
 package gg.auroramc.levels.menu;
 
+import gg.auroramc.aurora.api.levels.ConcreteMatcher;
+import gg.auroramc.aurora.api.levels.LevelMatcher;
 import gg.auroramc.aurora.api.menu.AuroraMenu;
 import gg.auroramc.aurora.api.menu.ItemBuilder;
 import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.aurora.api.message.Text;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.api.leveler.Matcher;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -60,7 +61,7 @@ public class MilestonesMenu {
             }
 
             var milestone = customLevels.get(i);
-            var rewards = milestone.getValue().rewards();
+            var rewards = milestone.getValue().computeRewards(milestone.getValue().getConfig().getLevel());
             var milestoneLevel = milestone.getKey();
 
 
@@ -129,7 +130,7 @@ public class MilestonesMenu {
         return menu;
     }
 
-    private List<Map.Entry<Long, Matcher>> getPage(int page, int pageSize) {
+    private List<Map.Entry<Integer, ConcreteMatcher>> getPage(int page, int pageSize) {
         return plugin.getLeveler().getLevelMatcher().getCustomMatchers().entrySet()
                 .stream().sorted(Map.Entry.comparingByKey())
                 .skip((long) page * pageSize).limit(pageSize).toList();

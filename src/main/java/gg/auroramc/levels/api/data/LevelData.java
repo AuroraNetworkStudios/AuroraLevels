@@ -5,10 +5,11 @@ import gg.auroramc.aurora.api.user.UserDataHolder;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LevelData extends UserDataHolder {
-    private final AtomicLong level = new AtomicLong(0);
+    private final AtomicInteger level = new AtomicInteger(0);
     private final AtomicDouble currentXP = new AtomicDouble(0);
 
     @Override
@@ -25,11 +26,11 @@ public class LevelData extends UserDataHolder {
     @Override
     public void initFrom(ConfigurationSection data) {
         if (data == null) return;
-        level.set(data.getLong("level", 0));
+        level.set(data.getInt("level", 0));
         currentXP.set(data.getDouble("currentXP", 0));
     }
 
-    public long getLevel() {
+    public int getLevel() {
         return level.get();
     }
 
@@ -37,7 +38,7 @@ public class LevelData extends UserDataHolder {
         return currentXP.get();
     }
 
-    public void setLevel(long level) {
+    public void setLevel(int level) {
         this.level.set(level);
         dirty.set(true);
     }

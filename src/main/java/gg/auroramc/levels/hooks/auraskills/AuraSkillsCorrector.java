@@ -4,9 +4,8 @@ import com.google.common.collect.Maps;
 import dev.aurelium.auraskills.api.AuraSkillsApi;
 import dev.aurelium.auraskills.api.stat.Stat;
 import dev.aurelium.auraskills.api.stat.StatModifier;
+import gg.auroramc.aurora.api.reward.RewardCorrector;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.api.leveler.Leveler;
-import gg.auroramc.levels.api.reward.RewardCorrector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,8 +20,9 @@ public class AuraSkillsCorrector implements RewardCorrector {
     }
 
     @Override
-    public void correctRewards(Leveler leveler, Player player) {
+    public void correctRewards(Player player) {
         CompletableFuture.runAsync(() -> {
+            var leveler = plugin.getLeveler();
             var data = leveler.getUserData(player);
             var level = data.getLevel();
 
@@ -34,11 +34,11 @@ public class AuraSkillsCorrector implements RewardCorrector {
             }
 
             // Gather new stat modifiers
-            for (long i = 1; i < level + 1; i++) {
+            for (int i = 1; i < level + 1; i++) {
                 var matcher = leveler.getLevelMatcher().getBestMatcher(i);
                 if (matcher == null) continue;
                 var formulaPlaceholders = leveler.getRewardFormulaPlaceholders(player, i);
-                for (var reward : matcher.rewards()) {
+                for (var reward : matcher.computeRewards(i)) {
                     if (reward instanceof AuraSkillsStatReward statReward) {
                         statMap.merge(statReward.getStat(), statReward.getValue(formulaPlaceholders), Double::sum);
                     }

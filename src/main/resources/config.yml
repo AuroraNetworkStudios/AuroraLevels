@@ -83,7 +83,8 @@ level-matchers:
 # You can add custom rewards to certain levels
 # This will be the highest priority
 custom-levels:
-  25:
+  my-custom-level:
+    level: 25
     rewards:
       my-money-reward:
         type: money

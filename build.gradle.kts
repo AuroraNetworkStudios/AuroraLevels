@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "gg.auroramc"
-version = "1.1.2"
+version = "1.2.0-SNAPSHOT"
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
-    compileOnly("gg.auroramc:Aurora:1.2.0")
+    compileOnly("gg.auroramc:Aurora:1.3.0-SNAPSHOT")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("dev.aurelium:auraskills-api-bukkit:2.0.7")
     compileOnly("io.lumine:Mythic-Dist:5.6.1")

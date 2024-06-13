@@ -1,6 +1,8 @@
 package gg.auroramc.levels.config;
 
 import gg.auroramc.aurora.api.config.AuroraConfig;
+import gg.auroramc.aurora.api.config.premade.ConcreteMatcherConfig;
+import gg.auroramc.aurora.api.config.premade.IntervalMatcherConfig;
 import gg.auroramc.levels.AuroraLevels;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,8 +22,8 @@ public class LevelConfig extends AuroraConfig {
     private LevelUpTitle levelUpTitle;
     private XpGainActionBar xpGainActionBar;
     private LevelUpSound levelUpSound;
-    private Map<String, LevelMatcherConfig> levelMatchers;
-    private Map<Long, CustomLevel> customLevels;
+    private Map<String, IntervalMatcherConfig> levelMatchers;
+    private Map<String, ConcreteMatcherConfig> customLevels;
     private CommandAliasConfig commandAliases;
 
     @Getter
@@ -64,18 +66,6 @@ public class LevelConfig extends AuroraConfig {
         private String sound;
         private Float volume;
         private Float pitch;
-    }
-
-    @Getter
-    public static final class LevelMatcherConfig {
-        private Integer interval;
-        private Integer priority;
-        private ConfigurationSection rewards;
-    }
-
-    @Getter
-    public static final class CustomLevel {
-        private ConfigurationSection rewards;
     }
 
     public LevelConfig(AuroraLevels plugin) {

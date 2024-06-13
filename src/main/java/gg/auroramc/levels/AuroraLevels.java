@@ -10,6 +10,7 @@ import gg.auroramc.levels.hooks.HookManager;
 import gg.auroramc.levels.leveler.PlayerLeveler;
 import gg.auroramc.levels.placeholder.LevelPlaceholderHandler;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AuroraLevels extends JavaPlugin {
@@ -49,12 +50,17 @@ public class AuroraLevels extends JavaPlugin {
         }
 
         HookManager.registerHooks(this);
+
+        Bukkit.getGlobalRegionScheduler().run(this, (task) -> {
+            var config = configManager.getLevelConfig();
+            leveler.getLevelMatcher().reload(config.getLevelMatchers(), config.getCustomLevels());
+        });
     }
 
     public void reload() {
         configManager.reload();
         commandManager.reload();
-        leveler.reload();
+        leveler.reload(false);
     }
 
     @Override

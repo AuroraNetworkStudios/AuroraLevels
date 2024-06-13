@@ -1,21 +1,13 @@
 package gg.auroramc.levels.api.leveler;
 
+import gg.auroramc.aurora.api.levels.MatcherManager;
 import gg.auroramc.aurora.api.message.Placeholder;
-import gg.auroramc.levels.api.reward.RewardCorrector;
 import gg.auroramc.levels.api.data.LevelData;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public interface Leveler {
-    /**
-     * Register a reward corrector which will be executed when player data is loaded
-     *
-     * @param rewardType    type of the reward
-     * @param corrector     corrector to register
-     */
-    void registerRewardCorrector(String rewardType, RewardCorrector corrector);
-
     /**
      * Get the level data of a player
      *
@@ -40,7 +32,7 @@ public interface Leveler {
      * @param player    player to set the level for
      * @param level     level to set
      */
-    void setPlayerLevel(Player player, long level);
+    void setPlayerLevel(Player player, int level);
 
     /**
      * Set the player's level to the given level without sending notifications or rewards and events.
@@ -50,7 +42,7 @@ public interface Leveler {
      * @param player    player to set the level for
      * @param level     level to set
      */
-    void setPlayerLevelRaw(Player player, long level);
+    void setPlayerLevelRaw(Player player, int level);
 
     /**
      * Get the xp required for the given level
@@ -58,7 +50,7 @@ public interface Leveler {
      * @param level     level to get the xp for
      * @return          xp required for the level
      */
-    double getXpForLevel(long level);
+    double getXpForLevel(int level);
 
     /**
      * Get how much xp the player needs to level up currently
@@ -75,12 +67,12 @@ public interface Leveler {
      * @param level     level to get the placeholders for
      * @return          list of placeholders for the reward formulas
      */
-    List<Placeholder<?>> getRewardFormulaPlaceholders(Player player, long level);
+    List<Placeholder<?>> getRewardFormulaPlaceholders(Player player, int level);
 
     /**
      * Get the level matcher
      *
      * @return  level matcher
      */
-    LevelMatcher getLevelMatcher();
+    MatcherManager getLevelMatcher();
 }
