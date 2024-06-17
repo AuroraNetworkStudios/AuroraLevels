@@ -24,8 +24,16 @@ public class MythicStatCorrector implements RewardCorrector {
             var leveler = plugin.getLeveler();
             var data = leveler.getUserData(player);
             var level = data.getLevel();
+            var mythic = MythicBukkit.inst();
+            var registry = mythic.getPlayerManager().getProfile(player).getStatRegistry();
 
             Map<StatType, Map<StatModifierType, Double>> statMap = Maps.newHashMap();
+
+            mythic.getStatManager().getStats().values()
+                    .forEach(statType -> {
+                        if (!statType.isEnabled()) return;
+                        registry.removeValue(statType, MythicStatReward.getSource());
+                    });
 
             // Gather new stat modifiers
             for (int i = 1; i < level + 1; i++) {
@@ -41,11 +49,9 @@ public class MythicStatCorrector implements RewardCorrector {
             }
 
             // Apply the new stat modifiers
-            var registry = MythicBukkit.inst().getPlayerManager().getProfile(player).getStatRegistry();
-
-            for(var entry : statMap.entrySet()) {
+            for (var entry : statMap.entrySet()) {
                 var statType = entry.getKey();
-                for(var modifierEntry : entry.getValue().entrySet()) {
+                for (var modifierEntry : entry.getValue().entrySet()) {
                     var modifierType = modifierEntry.getKey();
                     var value = modifierEntry.getValue();
                     AuroraLevels.logger().debug("Adding stat " + statType.getKey() + " with value " + value + " to player " + player.getName());
