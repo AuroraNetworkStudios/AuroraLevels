@@ -139,7 +139,6 @@ public class PlayerLeveler implements Leveler, Listener {
     private void rewardPlayer(Player player, int level) {
         var config = plugin.getConfigManager().getLevelConfig();
 
-
         List<Placeholder<?>> placeholders = getRewardFormulaPlaceholders(player, level);
 
         placeholders.add(Placeholder.of("{prev_level}", level - 1));

@@ -11,6 +11,7 @@ softdepend:
   - "AuraSkills"
   - "MythicMobs"
   - "PlaceholderAPI"
+  - "MythicLib"
 
 permissions:
   aurora.levels.*:
