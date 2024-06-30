@@ -3,14 +3,11 @@ package gg.auroramc.levels.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import gg.auroramc.aurora.api.AuroraAPI;
-import gg.auroramc.aurora.api.menu.AuroraMenu;
 import gg.auroramc.aurora.api.message.Chat;
 import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.leveler.PlayerLeveler;
 import gg.auroramc.levels.menu.LevelMenu;
 import gg.auroramc.levels.menu.MilestonesMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -111,18 +108,6 @@ public class LevelCommand extends BaseCommand {
     @CommandPermission("aurora.levels.admin.reload")
     public void onReload(CommandSender sender) {
         plugin.reload();
-
-        for (var player : Bukkit.getOnlinePlayers()) {
-            var invHolder = player.getOpenInventory().getTopInventory().getHolder();
-            if (invHolder instanceof AuroraMenu menu) {
-                if (menu.getId().equals(LevelMenu.getMenuId())) {
-                    new LevelMenu(plugin, player).open();
-                } else if (menu.getId().equals(MilestonesMenu.getMenuId())) {
-                    new MilestonesMenu(plugin, player).open();
-                }
-            }
-        }
-
         Chat.sendMessage(sender, plugin.getConfigManager().getMessageConfig().getReloaded());
     }
 }
