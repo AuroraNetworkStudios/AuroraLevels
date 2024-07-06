@@ -4,6 +4,7 @@ import gg.auroramc.aurora.api.config.AuroraConfig;
 import gg.auroramc.levels.AuroraLevels;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +13,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.function.Consumer;
 
 @Getter
 public class MessageConfig extends AuroraConfig {
@@ -28,6 +31,8 @@ public class MessageConfig extends AuroraConfig {
     private String mustBeNumber = "&cArgument must be a number!";
     private String playerNotFound = "&cPlayer not found!";
     private String commandError = "&cAn error occurred while executing this command!";
+    private String regionEnterDenyMinLevel = "&cYou must be at least level {min-level} to enter this region!";
+    private String regionEnterDenyMaxLevel = "&cYou must be at most level {max-level} to enter this region!";
 
     public MessageConfig(AuroraLevels plugin, String language) {
         super(getFile(plugin, language));
@@ -55,5 +60,17 @@ public class MessageConfig extends AuroraConfig {
                 }
             }
         }
+    }
+
+    @Override
+    protected List<Consumer<YamlConfiguration>> getMigrationSteps() {
+        return List.of(
+                (yaml) -> {
+                    yaml.set("region-enter-deny-min-level", "&cYou must be at least level {min-level} to enter this region!");
+                    yaml.set("region-enter-deny-max-level", "&cYou must be at most level {max-level} to enter this region!");
+                    yaml.set("config-version", null);
+                    yaml.set("config-version", 1);
+                }
+        );
     }
 }

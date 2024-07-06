@@ -28,10 +28,14 @@ public class AuroraLevels extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         configManager = new ConfigManager(this);
-
         l = AuroraAPI.createLogger("AuroraLevels", () -> configManager.getLevelConfig().getDebug());
+        HookManager.loadHooks(this);
+    }
+
+    @Override
+    public void onEnable() {
         AuroraAPI.getUserManager().registerUserDataHolder(LevelData.class);
 
         leveler = new PlayerLeveler(this);
@@ -49,7 +53,7 @@ public class AuroraLevels extends JavaPlugin {
             e.printStackTrace();
         }
 
-        HookManager.registerHooks(this);
+        HookManager.enableHooks(this);
 
         Bukkit.getGlobalRegionScheduler().run(this, (task) -> {
             var config = configManager.getLevelConfig();
