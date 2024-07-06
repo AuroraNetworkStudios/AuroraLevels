@@ -2,6 +2,7 @@ package gg.auroramc.levels.hooks.worldguard;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.session.MoveType;
@@ -42,6 +43,8 @@ public class EntryHandler extends Handler {
 
     @Override
     public boolean testMoveTo(LocalPlayer player, Location from, Location to, ApplicableRegionSet toSet, MoveType moveType) {
+        if(getSession().getManager().hasBypass(player, (World) to.getExtent())) return true;
+
         var user = AuroraAPI.getUser(player.getUniqueId());
         if (!user.isLoaded()) return true;
         var config = plugin.getConfigManager().getMessageConfig();
