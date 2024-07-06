@@ -61,7 +61,7 @@ public class EntryHandler extends Handler {
             return false;
         }
 
-        if (maxLevel != null && level >= maxLevel) {
+        if (maxLevel != null && level > maxLevel) {
             Chat.sendMessage(bukkitPlayer, config.getRegionEnterDenyMaxLevel(), Placeholder.of("{level}", level), Placeholder.of("{max-level}", maxLevel));
             return false;
         }
