@@ -35,7 +35,7 @@ public class AuroraLevels extends JavaPlugin {
         AuroraAPI.getUserManager().registerUserDataHolder(LevelData.class);
 
         leveler = new PlayerLeveler(this);
-        AuroraAPI.registerPlaceholderHandler(new LevelPlaceholderHandler(leveler));
+        AuroraAPI.registerPlaceholderHandler(new LevelPlaceholderHandler(this));
 
         commandManager = new CommandManager(this);
         commandManager.reload();
