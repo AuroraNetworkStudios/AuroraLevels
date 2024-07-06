@@ -20,9 +20,9 @@ import java.util.function.Consumer;
 public class MessageConfig extends AuroraConfig {
 
     private String reloaded = "&aReloaded configuration!";
-    private String levelSet = "&aLevel set to %level% for player %player%!";
-    private String levelSetTarget = "&aYour level was set to %level%!";
-    private String xpAddedFeedback = "&a%amount% XP added to player %player%!";
+    private String levelSet = "&aLevel set to {level} for player {player}!";
+    private String levelSetTarget = "&aYour level was set to {level}!";
+    private String xpAddedFeedback = "&a{amount} XP added to player {player}!";
     private String dataNotLoadedYet = "&cData for this player hasn't loaded yet, try again later!";
     private String dataNotLoadedYetSelf = "&cYour data isn't loaded yet, please try again later!";
     private String playerOnlyCommand = "&cThis command can only be executed by a player!";
