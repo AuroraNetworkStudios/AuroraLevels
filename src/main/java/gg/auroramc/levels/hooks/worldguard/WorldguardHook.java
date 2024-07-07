@@ -9,6 +9,7 @@ public class WorldguardHook implements Hook {
     public void hook(AuroraLevels plugin) {
         EntryHandler.Factory handlerFactory = EntryHandler.FACTORY(plugin);
         WorldGuard.getInstance().getPlatform().getSessionManager().registerHandler(handlerFactory, null);
+        AuroraLevels.logger().info("Hooked into WorldGuard for region entry tracking.");
     }
 
     @Override

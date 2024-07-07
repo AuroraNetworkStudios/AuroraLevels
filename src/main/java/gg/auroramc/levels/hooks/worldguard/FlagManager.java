@@ -19,7 +19,7 @@ public class FlagManager {
     private static void registerFlag(FlagRegistry registry, IntegerFlag flag) {
         try {
             registry.register(flag);
-            AuroraLevels.logger().debug("Registered WorldGuard flag " + flag.getName());
+            AuroraLevels.logger().info("Registered WorldGuard flag " + flag.getName());
         } catch (FlagConflictException e) {
             AuroraLevels.logger().warning("Could not register WorldGuard flag " + flag.getName());
         }

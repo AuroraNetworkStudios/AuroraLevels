@@ -10,5 +10,7 @@ public class LuckPermsHook implements Hook {
     public void hook(AuroraLevels plugin) {
         plugin.getLeveler().getRewardFactory().registerRewardType(NamespacedId.fromDefault("permission"), PermissionReward.class);
         plugin.getLeveler().getRewardAutoCorrector().registerCorrector(NamespacedId.fromDefault("permission"), new PermissionCorrector(plugin));
+
+        AuroraLevels.logger().info("Hooked into LuckPerms for permission rewards with reward type: 'permission'. Auto reward corrector for permissions is registered.");
     }
 }

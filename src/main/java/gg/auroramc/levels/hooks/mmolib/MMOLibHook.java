@@ -12,5 +12,7 @@ public class MMOLibHook implements Hook {
 
         plugin.getLeveler().getRewardAutoCorrector()
                 .registerCorrector(NamespacedId.fromDefault("mmo_stat"), new MMOStatCorrector(plugin));
+
+        AuroraLevels.logger().info("Hooked into MythicLib (MMOLib) for stat rewards with reward type: 'mmo_stat'. Auto reward corrector for stats is registered.");
     }
 }

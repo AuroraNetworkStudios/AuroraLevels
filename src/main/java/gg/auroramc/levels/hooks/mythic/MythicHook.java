@@ -22,6 +22,10 @@ public class MythicHook implements Hook, Listener {
 
         plugin.getLeveler().getRewardAutoCorrector()
                 .registerCorrector(NamespacedId.fromDefault("mythic_stat"), new MythicStatCorrector(plugin));
+
+        AuroraLevels.logger().info("Hooked into MythicMobs for custom mechanics (addAuroraLevel, giveAuroraXP), " +
+                "conditions (hasAuroraLevel) and \"mythic_stat\" reward. " +
+                "Auto reward corrector for stats is registered.");
     }
 
     @EventHandler

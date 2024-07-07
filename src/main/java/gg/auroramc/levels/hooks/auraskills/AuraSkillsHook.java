@@ -11,5 +11,7 @@ public class AuraSkillsHook implements Hook {
                 .registerRewardType(NamespacedId.fromDefault("auraskills_stat"), AuraSkillsStatReward.class);
         plugin.getLeveler().getRewardAutoCorrector()
                 .registerCorrector(NamespacedId.fromDefault("auraskills_stat"), new AuraSkillsCorrector(plugin));
+
+        AuroraLevels.logger().info("Hooked into AuraSkills for stat rewards with reward type: 'auraskills_stat'. Auto reward corrector for stats is registered.");
     }
 }
