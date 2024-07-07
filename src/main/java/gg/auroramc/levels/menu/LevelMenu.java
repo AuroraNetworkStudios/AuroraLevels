@@ -70,7 +70,9 @@ public class LevelMenu {
                 var currentXP = leveler.getUserData(player).getCurrentXP();
                 var requiredXP = leveler.getRequiredXpForLevelUp(player);
                 placeholders.add(Placeholder.of("{current}", AuroraAPI.formatNumber(((Double) currentXP).longValue())));
+                placeholders.add(Placeholder.of("{current_short}", AuroraAPI.formatNumberShort(currentXP)));
                 placeholders.add(Placeholder.of("{required}", AuroraAPI.formatNumber(((Double) requiredXP).longValue())));
+                placeholders.add(Placeholder.of("{required_short}", AuroraAPI.formatNumberShort(requiredXP)));
 
                 var bar = menuConfig.getProgressBar();
                 var pcs = bar.getLength();

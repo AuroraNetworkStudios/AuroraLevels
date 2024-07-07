@@ -1,5 +1,6 @@
 package gg.auroramc.levels.placeholder;
 
+import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.message.Text;
 import gg.auroramc.aurora.api.placeholder.PlaceholderHandler;
 import gg.auroramc.levels.AuroraLevels;
@@ -26,11 +27,13 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
         var leveler = plugin.getLeveler();
 
         if (args.length > 0) {
-            if (args[args.length - 1].equals("xp")) {
-                return String.valueOf(((Double) leveler.getUserData(player).getCurrentXP()).longValue());
-            } else if (args[args.length - 1].equals("xpnext")) {
-                return String.valueOf(((Double) (leveler.getXpForLevel(leveler.getUserData(player).getLevel() + 1) - leveler.getXpForLevel(leveler.getUserData(player).getLevel()))).longValue());
-            } else if (args[args.length - 1].equals("progressbar")) {
+            if (args[0].equals("xp")) {
+                var xp = leveler.getUserData(player).getCurrentXP();
+                return getFormattedXP(args, xp);
+            } else if (args[0].equals("xpnext")) {
+                var xp = (leveler.getXpForLevel(leveler.getUserData(player).getLevel() + 1) - leveler.getXpForLevel(leveler.getUserData(player).getLevel()));
+                return getFormattedXP(args, xp);
+            } else if (args[0].equals("progressbar")) {
                 var currentXP = leveler.getUserData(player).getCurrentXP();
                 var requiredXP = leveler.getRequiredXpForLevelUp(player);
                 var menuConfig = plugin.getConfigManager().getLevelMenuConfig();
@@ -46,8 +49,18 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
         return String.valueOf(leveler.getUserData(player).getLevel());
     }
 
+    private String getFormattedXP(String[] args, double xp) {
+        if(args.length > 1 && args[1].equals("formatted")) {
+            return AuroraAPI.formatNumber(((Double) xp).longValue());
+        }
+        if(args.length > 1 && args[1].equals("short")) {
+            return AuroraAPI.formatNumberShort(xp);
+        }
+        return String.valueOf(((Double) xp).longValue());
+    }
+
     @Override
     public List<String> getPatterns() {
-        return List.of("", "xp", "xpnext", "progressbar");
+        return List.of("", "xp", "xp_formatted", "xp_short", "xpnext", "xpnext_formatted", "xpnext_short", "progressbar");
     }
 }
