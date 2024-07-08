@@ -128,6 +128,13 @@ public class PlayerLeveler implements Leveler, Listener {
             formulaPlaceholders.add(Placeholder.of("{" + formula.getKey() + "_formatted}", AuroraAPI.formatNumber(value)));
         }
 
+        var totalRequiredXP = getXpForLevel(level);
+        var totalXP = getXpForLevel(getUserData(player).getLevel());
+
+        formulaPlaceholders.add(Placeholder.of("{required_xp_total}", AuroraAPI.formatNumber(totalRequiredXP)));
+        formulaPlaceholders.add(Placeholder.of("{required_xp_total_short}", AuroraAPI.formatNumberShort(totalRequiredXP)));
+        formulaPlaceholders.add(Placeholder.of("{current_xp_total}", AuroraAPI.formatNumber(totalXP)));
+        formulaPlaceholders.add(Placeholder.of("{current_xp_total_short}", AuroraAPI.formatNumberShort(totalXP)));
         formulaPlaceholders.add(Placeholder.of("{player}", player.getName()));
         formulaPlaceholders.add(Placeholder.of("{level}", level));
         formulaPlaceholders.add(Placeholder.of("{level_int}", level));
