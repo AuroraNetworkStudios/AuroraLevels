@@ -51,6 +51,7 @@ public class PlayerLeveler implements Leveler, Listener {
 
         rewardFactory.registerRewardType(NamespacedId.fromDefault("command"), CommandReward.class);
         rewardFactory.registerRewardType(NamespacedId.fromDefault("money"), MoneyReward.class);
+        rewardFactory.registerRewardType(NamespacedId.fromDefault("item"), ItemReward.class);
 
 
         this.levelMatcher.set(new MatcherManager(rewardFactory));
