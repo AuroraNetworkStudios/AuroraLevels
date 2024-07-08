@@ -13,10 +13,11 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 - Milestones (as custom levels)
 - Automatic reward correction if you change your leveling config later on
 - support math formulas in leveling requirements and in rewards
-- built in money/command/permission/AuraSkills-stat reward types
+- built in money/command/permission/AuraSkills-stat/mythic stats/mmolib stat/item reward types
 - Mythic(Mobs) custom mechanics and conditions so your mobs can give XP or levels. You can even check if a player has a certain aurora level or not with MythicCrucible.
 - PlaceholderAPI support
 - Multiple economy support
+- WorldGuard flags to control who can enter a zone
 
 
 ## Developer API
@@ -34,7 +35,7 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 <dependency>
     <groupId>gg.auroramc</groupId>
     <artifactId>AuroraLevels</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.2</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -49,7 +50,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'gg.auroramc:AuroraLevels:1.2.0'
+    compileOnly 'gg.auroramc:AuroraLevels:1.3.2'
 }
 ```
 
@@ -60,6 +61,6 @@ repositories {
 }
 
 dependencies { 
-    compileOnly("gg.auroramc:AuroraLevels:1.2.0")
+    compileOnly("gg.auroramc:AuroraLevels:1.3.2")
 }
 ```

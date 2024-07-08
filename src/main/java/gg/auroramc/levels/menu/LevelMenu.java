@@ -1,6 +1,9 @@
 package gg.auroramc.levels.menu;
 
 import gg.auroramc.aurora.api.AuroraAPI;
+import gg.auroramc.aurora.api.config.premade.ItemConfig;
+import gg.auroramc.aurora.api.levels.ConcreteMatcher;
+import gg.auroramc.aurora.api.levels.IntervalMatcher;
 import gg.auroramc.aurora.api.menu.AuroraMenu;
 import gg.auroramc.aurora.api.menu.ItemBuilder;
 import gg.auroramc.aurora.api.message.Placeholder;
@@ -13,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LevelMenu {
     @Getter
@@ -52,16 +56,29 @@ public class LevelMenu {
         int iteratorLevel = level;
 
         for (var slot : menuConfig.getLevelTrack()) {
-            var itemConfig = menuConfig.getItems().getLockedLevel();
-            var defaultMaterial = Material.RED_STAINED_GLASS_PANE;
+            var matcher = leveler.getLevelMatcher().getBestMatcher(iteratorLevel);
+            var rewards = matcher.computeRewards(iteratorLevel);
+
+            Map<String, ItemConfig> overrideItems = Map.of();
+
+            if (matcher instanceof IntervalMatcher intervalMatcher) {
+                overrideItems = intervalMatcher.getConfig().getItem();
+            } else if (matcher instanceof ConcreteMatcher concreteMatcher) {
+                overrideItems = concreteMatcher.getConfig().getItem();
+            }
+
+            ItemConfig itemConfig;
+            Material defaultMaterial;
 
             if (iteratorLevel == level) {
-                itemConfig = menuConfig.getItems().getCompletedLevel();
+                itemConfig = menuConfig.getItems().getCompletedLevel().merge(overrideItems.get("completed-level"));
                 defaultMaterial = Material.LIME_STAINED_GLASS_PANE;
-            }
-            if (iteratorLevel - 1 == level) {
-                itemConfig = menuConfig.getItems().getNextLevel();
+            } else if (iteratorLevel - 1 == level) {
+                itemConfig = menuConfig.getItems().getNextLevel().merge(overrideItems.get("next-level"));
                 defaultMaterial = Material.YELLOW_STAINED_GLASS_PANE;
+            } else {
+                itemConfig = menuConfig.getItems().getLockedLevel().merge(overrideItems.get("locked-level"));
+                defaultMaterial = Material.RED_STAINED_GLASS_PANE;
             }
 
             List<Placeholder<?>> placeholders = leveler.getRewardFormulaPlaceholders(player, iteratorLevel);
@@ -84,10 +101,10 @@ public class LevelMenu {
 
             var lore = new ArrayList<String>();
 
+
             for (var line : itemConfig.getLore()) {
                 if (line.equals("component:rewards")) {
                     var display = menuConfig.getDisplayComponents().get("rewards");
-                    var rewards = leveler.getLevelMatcher().getBestMatcher(iteratorLevel).computeRewards(iteratorLevel);
                     if (!rewards.isEmpty()) {
                         lore.add(display.getTitle());
                     }

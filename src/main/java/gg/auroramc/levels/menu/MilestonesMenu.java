@@ -1,7 +1,7 @@
 package gg.auroramc.levels.menu;
 
+import gg.auroramc.aurora.api.config.premade.ItemConfig;
 import gg.auroramc.aurora.api.levels.ConcreteMatcher;
-import gg.auroramc.aurora.api.levels.LevelMatcher;
 import gg.auroramc.aurora.api.menu.AuroraMenu;
 import gg.auroramc.aurora.api.menu.ItemBuilder;
 import gg.auroramc.aurora.api.message.Placeholder;
@@ -36,11 +36,10 @@ public class MilestonesMenu {
         var leveler = plugin.getLeveler();
         var menuConfig = plugin.getConfigManager().getMilestoneMenuConfig();
         var lvlMenuConfig = plugin.getConfigManager().getLevelMenuConfig();
-        var lvlConfig = plugin.getConfigManager().getLevelConfig();
 
         var menu = new AuroraMenu(player, menuConfig.getTitle(), 54, false, menuId);
 
-        if(menuConfig.getItems().getFiller().getEnabled()) {
+        if (menuConfig.getItems().getFiller().getEnabled()) {
             menu.addFiller(ItemBuilder.of(menuConfig.getItems().getFiller().getItem()).slot(0).build(player).getItemStack());
         } else {
             menu.addFiller(ItemBuilder.filler(Material.AIR));
@@ -64,15 +63,19 @@ public class MilestonesMenu {
             var rewards = milestone.getValue().computeRewards(milestone.getValue().getConfig().getLevel());
             var milestoneLevel = milestone.getKey();
 
+            Map<String, ItemConfig> overrideItems = milestone.getValue().getConfig().getItem();
 
             if (milestoneLevel == 0) continue;
 
-            var itemConfig = lvlMenuConfig.getItems().getLockedLevel();
-            var defaultMaterial = Material.RED_STAINED_GLASS_PANE;
+            ItemConfig itemConfig;
+            Material defaultMaterial;
 
             if (milestoneLevel <= level) {
-                itemConfig = lvlMenuConfig.getItems().getCompletedLevel();
+                itemConfig = lvlMenuConfig.getItems().getCompletedLevel().merge(overrideItems.get("completed-level"));
                 defaultMaterial = Material.LIME_STAINED_GLASS_PANE;
+            } else {
+                itemConfig = lvlMenuConfig.getItems().getLockedLevel().merge(overrideItems.get("locked-level"));
+                defaultMaterial = Material.RED_STAINED_GLASS_PANE;
             }
 
             List<Placeholder<?>> placeholders = leveler.getRewardFormulaPlaceholders(player, milestoneLevel);
