@@ -23,8 +23,9 @@ public interface Leveler {
      *
      * @param player   player to add the xp to
      * @param xp       amount of xp to add
+     * @return         the xp that was actually added (after applying multipliers, etc.)
      */
-    void addXpToPlayer(Player player, double xp);
+    double addXpToPlayer(Player player, double xp);
 
     /**
      * Set the player's level to the given level. It will handle level ups, events

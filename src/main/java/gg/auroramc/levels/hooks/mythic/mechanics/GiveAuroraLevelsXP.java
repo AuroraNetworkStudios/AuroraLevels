@@ -5,7 +5,6 @@ import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
-import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderDouble;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
@@ -35,10 +34,5 @@ public class GiveAuroraLevelsXP implements ITargetedEntitySkill {
         plugin.getLeveler().addXpToPlayer(player, xp.get(data));
 
         return SkillResult.SUCCESS;
-    }
-
-    @Override
-    public ThreadSafetyLevel getThreadSafetyLevel() {
-        return ThreadSafetyLevel.SYNC_ONLY;
     }
 }

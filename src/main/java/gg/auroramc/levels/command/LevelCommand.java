@@ -87,18 +87,18 @@ public class LevelCommand extends BaseCommand {
     @Description("Adds experience to a player")
     @CommandCompletion("@range:1-1000 @players true|false")
     @CommandPermission("aurora.levels.admin.addxp")
-    public void onAddXp(CommandSender sender, int xp, @Flags("other") Player player, @Default("false") boolean silent) {
+    public void onAddXp(CommandSender sender, double xp, @Flags("other") Player player, @Default("false") boolean silent) {
         if (!AuroraAPI.getUser(player.getUniqueId()).isLoaded()) {
             Chat.sendMessage(sender, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYet());
             return;
         }
 
-        plugin.getLeveler().addXpToPlayer(player, xp);
+        double added = plugin.getLeveler().addXpToPlayer(player, xp);
 
         if (!silent) {
             Chat.sendMessage(sender,
                     plugin.getConfigManager().getMessageConfig().getXpAddedFeedback(),
-                    Placeholder.of("{amount}", xp),
+                    Placeholder.of("{amount}", added),
                     Placeholder.of("{player}", player.getName()));
         }
     }

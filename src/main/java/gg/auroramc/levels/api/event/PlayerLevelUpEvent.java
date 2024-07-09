@@ -1,6 +1,7 @@
 package gg.auroramc.levels.api.event;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -24,6 +25,7 @@ public class PlayerLevelUpEvent extends Event {
     private final long level;
 
     public PlayerLevelUpEvent(Player player, long level) {
+        super(!Bukkit.getServer().isPrimaryThread());
         this.player = player;
         this.level = level;
     }
