@@ -4,9 +4,7 @@ import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.events.user.AuroraUserLoadedEvent;
 import gg.auroramc.aurora.api.expression.NumberExpression;
 import gg.auroramc.aurora.api.levels.MatcherManager;
-import gg.auroramc.aurora.api.message.ActionBar;
-import gg.auroramc.aurora.api.message.Placeholder;
-import gg.auroramc.aurora.api.message.Text;
+import gg.auroramc.aurora.api.message.*;
 import gg.auroramc.aurora.api.reward.*;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
@@ -144,7 +142,6 @@ public class PlayerLeveler implements Leveler, Listener {
     }
 
     private void rewardPlayer(Player player, int level) {
-
         var config = plugin.getConfigManager().getLevelConfig();
 
         List<Placeholder<?>> placeholders = getRewardFormulaPlaceholders(player, level);
@@ -156,9 +153,7 @@ public class PlayerLeveler implements Leveler, Listener {
         var matcher = levelMatcher.get().getBestMatcher(level);
         var rewards = matcher.computeRewards(level);
 
-        for (var reward : rewards) {
-            reward.execute(player, level, placeholders);
-        }
+        RewardExecutor.execute(rewards, player, level, placeholders);
 
         if (config.getLevelUpSound().getEnabled()) {
             var sound = config.getLevelUpSound();
@@ -190,13 +185,11 @@ public class PlayerLeveler implements Leveler, Listener {
                 if (!line.equals(messageLines.getLast())) text.append(Component.newline());
             }
 
-            player.sendMessage(text);
+            Chat.sendMessage(player, text.build());
         }
 
         if (config.getLevelUpTitle().getEnabled()) {
-            var title = Text.component(player, config.getLevelUpTitle().getTitle(), placeholders);
-            var subtitle = Text.component(player, config.getLevelUpTitle().getSubtitle(), placeholders);
-            player.showTitle(Title.title(title, subtitle));
+            TitleBar.send(player, config.getLevelUpTitle().getTitle(), config.getLevelUpTitle().getSubtitle(), placeholders);
         }
     }
 
