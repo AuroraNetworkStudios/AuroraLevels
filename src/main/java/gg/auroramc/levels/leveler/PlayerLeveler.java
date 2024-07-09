@@ -97,8 +97,7 @@ public class PlayerLeveler implements Leveler, Listener {
 
         if (newXP < requiredXpToLevelUp) {
             data.setCurrentXP(newXP);
-            Bukkit.getGlobalRegionScheduler().run(plugin,
-                    (task) -> Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(player, xp)));
+            Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(player, xp));
             return;
         }
 
@@ -110,12 +109,10 @@ public class PlayerLeveler implements Leveler, Listener {
             requiredXpToLevelUp = getRequiredXpForLevelUp(player);
 
             rewardPlayer(player, data.getLevel());
-            Bukkit.getGlobalRegionScheduler().run(plugin,
-                    (task) -> Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, data.getLevel())));
+            Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, data.getLevel()));
         }
 
-        Bukkit.getGlobalRegionScheduler().run(plugin,
-                (task) -> Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(player, xp)));
+        Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(player, xp));
     }
 
     public List<Placeholder<?>> getRewardFormulaPlaceholders(Player player, int level) {
@@ -145,59 +142,61 @@ public class PlayerLeveler implements Leveler, Listener {
     }
 
     private void rewardPlayer(Player player, int level) {
-        var config = plugin.getConfigManager().getLevelConfig();
+        Bukkit.getGlobalRegionScheduler().run(plugin, (task)-> {
+            var config = plugin.getConfigManager().getLevelConfig();
 
-        List<Placeholder<?>> placeholders = getRewardFormulaPlaceholders(player, level);
+            List<Placeholder<?>> placeholders = getRewardFormulaPlaceholders(player, level);
 
-        placeholders.add(Placeholder.of("{prev_level}", level - 1));
-        placeholders.add(Placeholder.of("{prev_level_int}", level - 1));
-        placeholders.add(Placeholder.of("{prev_level_formatted}", AuroraAPI.formatNumber(level - 1)));
+            placeholders.add(Placeholder.of("{prev_level}", level - 1));
+            placeholders.add(Placeholder.of("{prev_level_int}", level - 1));
+            placeholders.add(Placeholder.of("{prev_level_formatted}", AuroraAPI.formatNumber(level - 1)));
 
-        var matcher = levelMatcher.get().getBestMatcher(level);
-        var rewards = matcher.computeRewards(level);
+            var matcher = levelMatcher.get().getBestMatcher(level);
+            var rewards = matcher.computeRewards(level);
 
-        for (var reward : rewards) {
-            reward.execute(player, level, placeholders);
-        }
-
-        if (config.getLevelUpSound().getEnabled()) {
-            var sound = config.getLevelUpSound();
-            player.playSound(player.getLocation(),
-                    Sound.valueOf(sound.getSound().toUpperCase()),
-                    sound.getVolume(),
-                    sound.getPitch());
-        }
-
-        if (config.getLevelUpMessage().getEnabled()) {
-            var text = Component.text();
-
-            var messageLines = config.getLevelUpMessage().getMessage();
-
-            for (var line : messageLines) {
-                if (line.equals("component:rewards")) {
-                    if (!rewards.isEmpty()) {
-                        text.append(Text.component(player, config.getDisplayComponents().get("rewards").getTitle(), placeholders));
-                    }
-                    for (var reward : rewards) {
-                        text.append(Component.newline());
-                        var display = config.getDisplayComponents().get("rewards").getLine().replace("{reward}", reward.getDisplay(player, placeholders));
-                        text.append(Text.component(player, display, placeholders));
-                    }
-                } else {
-                    text.append(Text.component(player, line, placeholders));
-                }
-
-                if (!line.equals(messageLines.getLast())) text.append(Component.newline());
+            for (var reward : rewards) {
+                reward.execute(player, level, placeholders);
             }
 
-            player.sendMessage(text);
-        }
+            if (config.getLevelUpSound().getEnabled()) {
+                var sound = config.getLevelUpSound();
+                player.playSound(player.getLocation(),
+                        Sound.valueOf(sound.getSound().toUpperCase()),
+                        sound.getVolume(),
+                        sound.getPitch());
+            }
 
-        if (config.getLevelUpTitle().getEnabled()) {
-            var title = Text.component(player, config.getLevelUpTitle().getTitle(), placeholders);
-            var subtitle = Text.component(player, config.getLevelUpTitle().getSubtitle(), placeholders);
-            player.showTitle(Title.title(title, subtitle));
-        }
+            if (config.getLevelUpMessage().getEnabled()) {
+                var text = Component.text();
+
+                var messageLines = config.getLevelUpMessage().getMessage();
+
+                for (var line : messageLines) {
+                    if (line.equals("component:rewards")) {
+                        if (!rewards.isEmpty()) {
+                            text.append(Text.component(player, config.getDisplayComponents().get("rewards").getTitle(), placeholders));
+                        }
+                        for (var reward : rewards) {
+                            text.append(Component.newline());
+                            var display = config.getDisplayComponents().get("rewards").getLine().replace("{reward}", reward.getDisplay(player, placeholders));
+                            text.append(Text.component(player, display, placeholders));
+                        }
+                    } else {
+                        text.append(Text.component(player, line, placeholders));
+                    }
+
+                    if (!line.equals(messageLines.getLast())) text.append(Component.newline());
+                }
+
+                player.sendMessage(text);
+            }
+
+            if (config.getLevelUpTitle().getEnabled()) {
+                var title = Text.component(player, config.getLevelUpTitle().getTitle(), placeholders);
+                var subtitle = Text.component(player, config.getLevelUpTitle().getSubtitle(), placeholders);
+                player.showTitle(Title.title(title, subtitle));
+            }
+        });
     }
 
     public void setPlayerLevel(Player player, int level) {

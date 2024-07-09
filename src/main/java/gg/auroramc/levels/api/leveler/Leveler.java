@@ -19,6 +19,7 @@ public interface Leveler {
     /**
      * Adds the given amount of xp to the player. It will handle level ups, events
      * notifications and rewards and everything else.
+     * Only call this method from the main thread or from global region scheduler!.
      *
      * @param player   player to add the xp to
      * @param xp       amount of xp to add
