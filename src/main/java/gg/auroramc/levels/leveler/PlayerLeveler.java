@@ -4,16 +4,16 @@ import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.events.user.AuroraUserLoadedEvent;
 import gg.auroramc.aurora.api.expression.NumberExpression;
 import gg.auroramc.aurora.api.levels.MatcherManager;
-import gg.auroramc.aurora.api.reward.*;
 import gg.auroramc.aurora.api.message.ActionBar;
 import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.aurora.api.message.Text;
+import gg.auroramc.aurora.api.reward.*;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
 import gg.auroramc.levels.api.data.LevelData;
-import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.api.event.PlayerLevelUpEvent;
 import gg.auroramc.levels.api.event.PlayerXpGainEvent;
+import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.reward.corrector.CommandCorrector;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -24,7 +24,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -75,7 +77,7 @@ public class PlayerLeveler implements Leveler, Listener {
         levelXPCache.clear();
         formulaCache.clear();
 
-        if(!first) {
+        if (!first) {
             levelMatcher.get().reload(config.getLevelMatchers(), config.getCustomLevels());
         }
     }
@@ -142,61 +144,60 @@ public class PlayerLeveler implements Leveler, Listener {
     }
 
     private void rewardPlayer(Player player, int level) {
-        Bukkit.getGlobalRegionScheduler().run(plugin, (task)-> {
-            var config = plugin.getConfigManager().getLevelConfig();
 
-            List<Placeholder<?>> placeholders = getRewardFormulaPlaceholders(player, level);
+        var config = plugin.getConfigManager().getLevelConfig();
 
-            placeholders.add(Placeholder.of("{prev_level}", level - 1));
-            placeholders.add(Placeholder.of("{prev_level_int}", level - 1));
-            placeholders.add(Placeholder.of("{prev_level_formatted}", AuroraAPI.formatNumber(level - 1)));
+        List<Placeholder<?>> placeholders = getRewardFormulaPlaceholders(player, level);
 
-            var matcher = levelMatcher.get().getBestMatcher(level);
-            var rewards = matcher.computeRewards(level);
+        placeholders.add(Placeholder.of("{prev_level}", level - 1));
+        placeholders.add(Placeholder.of("{prev_level_int}", level - 1));
+        placeholders.add(Placeholder.of("{prev_level_formatted}", AuroraAPI.formatNumber(level - 1)));
 
-            for (var reward : rewards) {
-                reward.execute(player, level, placeholders);
-            }
+        var matcher = levelMatcher.get().getBestMatcher(level);
+        var rewards = matcher.computeRewards(level);
 
-            if (config.getLevelUpSound().getEnabled()) {
-                var sound = config.getLevelUpSound();
-                player.playSound(player.getLocation(),
-                        Sound.valueOf(sound.getSound().toUpperCase()),
-                        sound.getVolume(),
-                        sound.getPitch());
-            }
+        for (var reward : rewards) {
+            reward.execute(player, level, placeholders);
+        }
 
-            if (config.getLevelUpMessage().getEnabled()) {
-                var text = Component.text();
+        if (config.getLevelUpSound().getEnabled()) {
+            var sound = config.getLevelUpSound();
+            player.playSound(player.getLocation(),
+                    Sound.valueOf(sound.getSound().toUpperCase()),
+                    sound.getVolume(),
+                    sound.getPitch());
+        }
 
-                var messageLines = config.getLevelUpMessage().getMessage();
+        if (config.getLevelUpMessage().getEnabled()) {
+            var text = Component.text();
 
-                for (var line : messageLines) {
-                    if (line.equals("component:rewards")) {
-                        if (!rewards.isEmpty()) {
-                            text.append(Text.component(player, config.getDisplayComponents().get("rewards").getTitle(), placeholders));
-                        }
-                        for (var reward : rewards) {
-                            text.append(Component.newline());
-                            var display = config.getDisplayComponents().get("rewards").getLine().replace("{reward}", reward.getDisplay(player, placeholders));
-                            text.append(Text.component(player, display, placeholders));
-                        }
-                    } else {
-                        text.append(Text.component(player, line, placeholders));
+            var messageLines = config.getLevelUpMessage().getMessage();
+
+            for (var line : messageLines) {
+                if (line.equals("component:rewards")) {
+                    if (!rewards.isEmpty()) {
+                        text.append(Text.component(player, config.getDisplayComponents().get("rewards").getTitle(), placeholders));
                     }
-
-                    if (!line.equals(messageLines.getLast())) text.append(Component.newline());
+                    for (var reward : rewards) {
+                        text.append(Component.newline());
+                        var display = config.getDisplayComponents().get("rewards").getLine().replace("{reward}", reward.getDisplay(player, placeholders));
+                        text.append(Text.component(player, display, placeholders));
+                    }
+                } else {
+                    text.append(Text.component(player, line, placeholders));
                 }
 
-                player.sendMessage(text);
+                if (!line.equals(messageLines.getLast())) text.append(Component.newline());
             }
 
-            if (config.getLevelUpTitle().getEnabled()) {
-                var title = Text.component(player, config.getLevelUpTitle().getTitle(), placeholders);
-                var subtitle = Text.component(player, config.getLevelUpTitle().getSubtitle(), placeholders);
-                player.showTitle(Title.title(title, subtitle));
-            }
-        });
+            player.sendMessage(text);
+        }
+
+        if (config.getLevelUpTitle().getEnabled()) {
+            var title = Text.component(player, config.getLevelUpTitle().getTitle(), placeholders);
+            var subtitle = Text.component(player, config.getLevelUpTitle().getSubtitle(), placeholders);
+            player.showTitle(Title.title(title, subtitle));
+        }
     }
 
     public void setPlayerLevel(Player player, int level) {
