@@ -30,17 +30,23 @@ public class PermissionCorrector implements RewardCorrector {
                 var formulaPlaceholders = leveler.getRewardFormulaPlaceholders(player, i);
                 for (var reward : matcher.computeRewards(i)) {
                     if (reward instanceof PermissionReward permissionReward) {
-                        if (permissionReward.getPermission() == null) continue;
-                        var node = permissionReward.buildNode(player, formulaPlaceholders);
-                        var hasPermission = LuckPermsProvider.get().getUserManager().getUser(player.getUniqueId())
-                                .data().contains(node, NodeEqualityPredicate.EXACT);
+                        if (permissionReward.getPermissions() == null || permissionReward.getPermissions().isEmpty()) continue;
+                        var nodes = permissionReward.buildNodes(player, formulaPlaceholders);
+                        LuckPermsProvider.get().getUserManager().modifyUser(player.getUniqueId(), (user) -> {
+                            for (var node : nodes) {
+                                var hasPermission = LuckPermsProvider.get().getUserManager().getUser(player.getUniqueId())
+                                        .data().contains(node, NodeEqualityPredicate.EXACT);
 
-                        if (hasPermission.equals(Tristate.UNDEFINED)) {
-                            AuroraLevels.logger().debug("Permission " + node.getKey() + " is undefined for player " + player.getName());
-                            permissionReward.execute(player, i, formulaPlaceholders);
-                        }
+                                if (hasPermission.equals(Tristate.UNDEFINED)) {
+                                    AuroraLevels.logger().debug("Permission " + node.getKey() + " is undefined for player " + player.getName());
+                                    user.data().add(node);
+                                }
+                            }
+                        });
                     }
                 }
+
+
             }
         });
     }
