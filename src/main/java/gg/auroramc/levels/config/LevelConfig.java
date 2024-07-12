@@ -5,11 +5,12 @@ import gg.auroramc.aurora.api.config.premade.ConcreteMatcherConfig;
 import gg.auroramc.aurora.api.config.premade.IntervalMatcherConfig;
 import gg.auroramc.levels.AuroraLevels;
 import lombok.Getter;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Getter
 public class LevelConfig extends AuroraConfig {
@@ -25,6 +26,7 @@ public class LevelConfig extends AuroraConfig {
     private Map<String, IntervalMatcherConfig> levelMatchers;
     private Map<String, ConcreteMatcherConfig> customLevels;
     private CommandAliasConfig commandAliases;
+    private Map<String, String> iconGenerator;
 
     @Getter
     public static final class CommandAliasConfig {
@@ -80,5 +82,20 @@ public class LevelConfig extends AuroraConfig {
         if (!getFile(plugin).exists()) {
             plugin.saveResource("config.yml", false);
         }
+    }
+
+    @Override
+    protected List<Consumer<YamlConfiguration>> getMigrationSteps() {
+        return List.of(
+                (yaml) -> {
+                    yaml.set("icon-generator", Map.of(
+                            "0", "%any_placeholder_here%",
+                            "1", "%oraxen_number1%",
+                            "2", "any character, text here",
+                            "50", "same"
+                    ));
+                    yaml.set("config-version", null);
+                    yaml.set("config-version", 1);
+                });
     }
 }

@@ -44,16 +44,33 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
                 var remainingPcs = pcs - completedPcs;
                 var rawBar = bar.getFilledCharacter().repeat(completedPcs) + bar.getUnfilledCharacter().repeat(remainingPcs) + "&r";
                 return serializer.serialize(Text.component(rawBar));
+            } else if (args[0].equals("icon")) {
+                String level = String.valueOf(leveler.getUserData(player).getLevel());
+                StringBuilder placeholder = new StringBuilder(plugin.getConfigManager().getLevelConfig().getIconGenerator().getOrDefault(level, ""));
+
+                if (placeholder.isEmpty()) {
+                    for (String c : level.split("")) {
+                        String charIcon = plugin.getConfigManager().getLevelConfig().getIconGenerator().get(c);
+                        if (charIcon == null) {
+                            return null;
+                        } else {
+                            placeholder.append(charIcon);
+                        }
+                    }
+                }
+
+                return serializer.serialize(Text.component(player, placeholder.toString()));
+
             }
         }
         return String.valueOf(leveler.getUserData(player).getLevel());
     }
 
     private String getFormattedXP(String[] args, double xp) {
-        if(args.length > 1 && args[1].equals("formatted")) {
+        if (args.length > 1 && args[1].equals("formatted")) {
             return AuroraAPI.formatNumber(((Double) xp).longValue());
         }
-        if(args.length > 1 && args[1].equals("short")) {
+        if (args.length > 1 && args[1].equals("short")) {
             return AuroraAPI.formatNumberShort(xp);
         }
         return String.valueOf(((Double) xp).longValue());
