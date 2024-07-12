@@ -41,16 +41,34 @@ public class LevelMenu {
 
         var menu = new AuroraMenu(player, menuConfig.getTitle(), 54, false, menuId);
 
-        if(menuConfig.getItems().getFiller().getEnabled()) {
+        if (menuConfig.getItems().getFiller().getEnabled()) {
             menu.addFiller(ItemBuilder.of(menuConfig.getItems().getFiller().getItem()).slot(0).build(player).getItemStack());
         } else {
             menu.addFiller(ItemBuilder.filler(Material.AIR));
         }
 
         int level = leveler.getUserData(player).getLevel();
+        var lbm = AuroraAPI.getLeaderboards();
+
+        var lb = AuroraAPI.getUser(player.getUniqueId()).getLeaderboardEntries().get("levels");
+        var lbPositionPlaceholder = Placeholder.of("{lb_position}", lb == null ? lbm.getEmptyPlaceholder() : AuroraAPI.formatNumber(lb.getPosition()));
+        var lbPositionPercentPlaceholder = Placeholder.of("{lb_position_percent}",
+                lb == null ? lbm.getEmptyPlaceholder() : AuroraAPI.formatNumber(
+                        Math.min(((double) lb.getPosition() / Math.max(1, AuroraAPI.getLeaderboards().getBoardSize("levels"))) * 100, 100)
+                )
+        );
+        var lbBoardSizePlaceholder = Placeholder.of("{lb_size}", AuroraAPI.formatNumber(AuroraAPI.getLeaderboards().getBoardSize("levels")));
+        var totalCurrentXP = leveler.getXpForLevel(leveler.getUserData(player).getLevel()) + leveler.getUserData(player).getCurrentXP();
 
         for (var customItem : menuConfig.getCustomItems().values()) {
-            menu.addItem(ItemBuilder.of(customItem).placeholder(Placeholder.of("{level}", level)).build(player));
+            menu.addItem(ItemBuilder.of(customItem)
+                    .placeholder(Placeholder.of("{level}", level))
+                    .placeholder(lbPositionPlaceholder)
+                    .placeholder(lbPositionPercentPlaceholder)
+                    .placeholder(lbBoardSizePlaceholder)
+                    .placeholder(Placeholder.of("{current}", AuroraAPI.formatNumber(totalCurrentXP)))
+                    .placeholder(Placeholder.of("{current_short}", AuroraAPI.formatNumberShort(totalCurrentXP)))
+                    .build(player));
         }
 
         int iteratorLevel = level;
@@ -82,6 +100,9 @@ public class LevelMenu {
             }
 
             List<Placeholder<?>> placeholders = leveler.getRewardFormulaPlaceholders(player, iteratorLevel);
+            placeholders.add(lbPositionPlaceholder);
+            placeholders.add(lbPositionPercentPlaceholder);
+            placeholders.add(lbBoardSizePlaceholder);
 
             if (iteratorLevel - 1 == level) {
                 var currentXP = leveler.getUserData(player).getCurrentXP();

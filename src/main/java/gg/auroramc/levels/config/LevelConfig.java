@@ -27,6 +27,7 @@ public class LevelConfig extends AuroraConfig {
     private Map<String, ConcreteMatcherConfig> customLevels;
     private CommandAliasConfig commandAliases;
     private Map<String, String> iconGenerator;
+    private Integer leaderboardCacheSize = 10;
 
     @Getter
     public static final class CommandAliasConfig {
@@ -96,6 +97,13 @@ public class LevelConfig extends AuroraConfig {
                     ));
                     yaml.set("config-version", null);
                     yaml.set("config-version", 1);
-                });
+                },
+                (yaml) -> {
+                    yaml.set("leaderboard-cache-size", 10);
+                    yaml.setComments("leaderboard-cache-size", List.of("This only affects placeholder generation, like %aurora_lb_levels_name_10% and %aurora_lb_levels_fvalue_10%"));
+                    yaml.set("config-version", null);
+                    yaml.set("config-version", 1);
+                }
+        );
     }
 }

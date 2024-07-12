@@ -130,7 +130,7 @@ public class PlayerLeveler implements Leveler, Listener {
         }
 
         var totalRequiredXP = getXpForLevel(level);
-        var totalXP = getXpForLevel(getUserData(player).getLevel());
+        var totalXP = getXpForLevel(getUserData(player).getLevel()) + getUserData(player).getCurrentXP();
 
         formulaPlaceholders.add(Placeholder.of("{required_xp_total}", AuroraAPI.formatNumber(totalRequiredXP)));
         formulaPlaceholders.add(Placeholder.of("{required_xp_total_short}", AuroraAPI.formatNumberShort(totalRequiredXP)));

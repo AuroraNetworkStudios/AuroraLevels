@@ -32,6 +32,13 @@ public class AuroraLevels extends JavaPlugin {
         configManager = new ConfigManager(this);
         l = AuroraAPI.createLogger("AuroraLevels", () -> configManager.getLevelConfig().getDebug());
         HookManager.loadHooks(this);
+
+        AuroraAPI.getLeaderboards().registerBoard(
+                "levels",
+                (user) -> leveler.getXpForLevel(user.getData(LevelData.class).getLevel()) + user.getData(LevelData.class).getCurrentXP(),
+                (entry) -> AuroraAPI.formatNumber(AuroraAPI.getUser(entry.getUuid()).getData(LevelData.class).getLevel()),
+                100
+        );
     }
 
     @Override
