@@ -5,6 +5,9 @@ xp-formula: "10 + (level - 1) * 10 + (level - 1) * (level - 1) * 2"
 
 language: en
 
+# This only affects placeholder generation, like %aurora_lb_levels_name_10% and %aurora_lb_levels_fvalue_10%
+leaderboard-cache-size: 10
+
 # These can be used in the rewards and in menu templates
 # Can be any name you want
 # You can reference it like {name} in rewards, menus, messages, etc. (eg: {money} for this example)
@@ -96,4 +99,4 @@ custom-levels:
         amount: 3
         display: "&8+&43 {symbol} {stat}"
 
-config-version: 0
+config-version: 1
