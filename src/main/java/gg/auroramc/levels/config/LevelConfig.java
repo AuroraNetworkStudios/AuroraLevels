@@ -102,7 +102,7 @@ public class LevelConfig extends AuroraConfig {
                             "50", "same"
                     ));
                     yaml.set("config-version", null);
-                    yaml.set("config-version", 1);
+                    yaml.set("config-version", 2);
                 }
         );
     }
