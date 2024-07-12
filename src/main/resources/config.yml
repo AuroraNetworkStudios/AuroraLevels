@@ -99,4 +99,10 @@ custom-levels:
         amount: 3
         display: "&8+&43 {symbol} {stat}"
 
-config-version: 1
+icon-generator:
+  0: "%any_placeholder_here%"
+  1: "%oraxen_number1%"
+  2: "any character, text here"
+  50: "same"
+
+config-version: 2
