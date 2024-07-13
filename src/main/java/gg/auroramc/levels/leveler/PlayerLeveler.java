@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
@@ -242,5 +243,12 @@ public class PlayerLeveler implements Leveler, Listener {
         var player = event.getUser().getPlayer();
         if (player == null) return;
         rewardAutoCorrector.correctRewards(player);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerXPGain(PlayerXpGainEvent event) {
+        var user = AuroraAPI.getUser(event.getPlayer().getUniqueId());
+        if (!user.isLoaded()) return;
+        AuroraAPI.getLeaderboards().updateUser(user, "levels");
     }
 }
