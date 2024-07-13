@@ -58,7 +58,7 @@ public class LevelMenu {
                         Math.min(((double) lb.getPosition() / Math.max(1, AuroraAPI.getLeaderboards().getBoardSize("levels"))) * 100, 100)
                 )
         );
-        var lbBoardSizePlaceholder = Placeholder.of("{lb_size}", AuroraAPI.formatNumber(Math.max(AuroraAPI.getLeaderboards().getBoardSize("levels"), lb == null ? Bukkit.getOnlinePlayers().size() : lb.getPosition())));
+        var lbBoardSizePlaceholder = Placeholder.of("{lb_size}", AuroraAPI.formatNumber(Math.max(AuroraAPI.getLeaderboards().getBoardSize("levels"), lb == null ? Bukkit.getOnlinePlayers().size() : Math.max(lb.getPosition(), Bukkit.getOnlinePlayers().size()))));
         var totalCurrentXP = leveler.getXpForLevel(leveler.getUserData(player).getLevel()) + leveler.getUserData(player).getCurrentXP();
 
         for (var customItem : menuConfig.getCustomItems().values()) {

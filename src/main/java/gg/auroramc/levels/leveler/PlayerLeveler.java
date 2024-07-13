@@ -222,6 +222,7 @@ public class PlayerLeveler implements Leveler, Listener {
     }
 
     public double getXpForLevel(int level) {
+        if (level == 0) return 0;
         return levelXPCache.computeIfAbsent(level,
                 (l) -> xpFormula.get().evaluate(Placeholder.of("level", l)));
     }
