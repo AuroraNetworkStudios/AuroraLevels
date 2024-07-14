@@ -78,6 +78,6 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
 
     @Override
     public List<String> getPatterns() {
-        return List.of("", "xp", "xp_formatted", "xp_short", "xpnext", "xpnext_formatted", "xpnext_short", "progressbar");
+        return List.of("", "xp", "xp_formatted", "xp_short", "xpnext", "xpnext_formatted", "xpnext_short", "progressbar", "icon");
     }
 }
