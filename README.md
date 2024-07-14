@@ -18,6 +18,7 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 - PlaceholderAPI support
 - Multiple economy support
 - WorldGuard flags to control who can enter a zone
+- Leaderboard
 
 
 ## Developer API
@@ -35,7 +36,7 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 <dependency>
     <groupId>gg.auroramc</groupId>
     <artifactId>AuroraLevels</artifactId>
-    <version>1.4.1</version>
+    <version>1.5.0</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -50,7 +51,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'gg.auroramc:AuroraLevels:1.4.1'
+    compileOnly 'gg.auroramc:AuroraLevels:1.5.0'
 }
 ```
 
@@ -61,6 +62,6 @@ repositories {
 }
 
 dependencies { 
-    compileOnly("gg.auroramc:AuroraLevels:1.4.1")
+    compileOnly("gg.auroramc:AuroraLevels:1.5.0")
 }
 ```
