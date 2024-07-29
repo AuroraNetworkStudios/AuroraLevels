@@ -52,13 +52,13 @@ public class LevelMenu {
         var lbm = AuroraAPI.getLeaderboards();
 
         var lb = AuroraAPI.getUser(player.getUniqueId()).getLeaderboardEntries().get("levels");
-        var lbPositionPlaceholder = Placeholder.of("{lb_position}", lb == null ? lbm.getEmptyPlaceholder() : AuroraAPI.formatNumber(lb.getPosition()));
+        var lbPositionPlaceholder = Placeholder.of("{lb_position}", lb == null || lb.getPosition() == 0 ? lbm.getEmptyPlaceholder() : AuroraAPI.formatNumber(lb.getPosition()));
         var lbPositionPercentPlaceholder = Placeholder.of("{lb_position_percent}",
-                lb == null ? lbm.getEmptyPlaceholder() : AuroraAPI.formatNumber(
+                lb == null || lb.getPosition() == 0 ? lbm.getEmptyPlaceholder() : AuroraAPI.formatNumber(
                         Math.min(((double) lb.getPosition() / Math.max(1, AuroraAPI.getLeaderboards().getBoardSize("levels"))) * 100, 100)
                 )
         );
-        var lbBoardSizePlaceholder = Placeholder.of("{lb_size}", AuroraAPI.formatNumber(Math.max(AuroraAPI.getLeaderboards().getBoardSize("levels"), lb == null ? Bukkit.getOnlinePlayers().size() : Math.max(lb.getPosition(), Bukkit.getOnlinePlayers().size()))));
+        var lbBoardSizePlaceholder = Placeholder.of("{lb_size}", AuroraAPI.formatNumber(Math.max(AuroraAPI.getLeaderboards().getBoardSize("levels"), lb == null || lb.getPosition() == 0 ? Bukkit.getOnlinePlayers().size() : Math.max(lb.getPosition(), Bukkit.getOnlinePlayers().size()))));
         var totalCurrentXP = leveler.getXpForLevel(leveler.getUserData(player).getLevel()) + leveler.getUserData(player).getCurrentXP();
 
         for (var customItem : menuConfig.getCustomItems().values()) {

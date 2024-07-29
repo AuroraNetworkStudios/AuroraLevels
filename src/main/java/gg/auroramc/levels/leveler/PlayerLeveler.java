@@ -102,6 +102,7 @@ public class PlayerLeveler implements Leveler, Listener {
 
         if (newXP < requiredXpToLevelUp) {
             data.setCurrentXP(newXP);
+            AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
             return xp;
         }
 
@@ -115,6 +116,8 @@ public class PlayerLeveler implements Leveler, Listener {
             rewardPlayer(player, data.getLevel());
             Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, data.getLevel()));
         }
+
+        AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
 
         return xp;
     }
@@ -205,6 +208,7 @@ public class PlayerLeveler implements Leveler, Listener {
         if (data.getLevel() > level) {
             data.setLevel(level);
             Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, level));
+            AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
             return;
         }
 
@@ -213,12 +217,15 @@ public class PlayerLeveler implements Leveler, Listener {
             rewardPlayer(player, l);
             Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, level));
         }
+
+        AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
     }
 
     public void setPlayerLevelRaw(Player player, int level) {
         var data = getUserData(player);
         data.setCurrentXP(0);
         data.setLevel(level);
+        AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
     }
 
     public double getXpForLevel(int level) {
@@ -244,12 +251,5 @@ public class PlayerLeveler implements Leveler, Listener {
         var player = event.getUser().getPlayer();
         if (player == null) return;
         rewardAutoCorrector.correctRewards(player);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerXPGain(PlayerXpGainEvent event) {
-        var user = AuroraAPI.getUser(event.getPlayer().getUniqueId());
-        if (!user.isLoaded()) return;
-        AuroraAPI.getLeaderboards().updateUser(user, "levels");
     }
 }

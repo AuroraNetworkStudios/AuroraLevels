@@ -36,7 +36,7 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 <dependency>
     <groupId>gg.auroramc</groupId>
     <artifactId>AuroraLevels</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -51,7 +51,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'gg.auroramc:AuroraLevels:1.5.0'
+    compileOnly 'gg.auroramc:AuroraLevels:1.5.1'
 }
 ```
 
@@ -62,6 +62,6 @@ repositories {
 }
 
 dependencies { 
-    compileOnly("gg.auroramc:AuroraLevels:1.5.0")
+    compileOnly("gg.auroramc:AuroraLevels:1.5.1")
 }
 ```
