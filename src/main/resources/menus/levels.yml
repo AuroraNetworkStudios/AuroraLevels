@@ -4,6 +4,8 @@ title: "Player levels"
 # Then the next level and the locked levels
 level-track: [ 20, 21, 22, 23, 24 ]
 
+rows: 6
+
 progress-bar:
   length: 10
   filled-character: "&a&l■"

@@ -13,6 +13,7 @@ import java.util.Map;
 public class LevelMenuConfig extends AuroraConfig {
     private String title;
     private List<Integer> levelTrack;
+    private Integer rows = 6;
     private Map<String, DisplayComponent> displayComponents;
     private Items items;
     private Map<String, ItemConfig> customItems;

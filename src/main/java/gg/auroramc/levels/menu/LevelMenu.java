@@ -40,7 +40,7 @@ public class LevelMenu {
         var cfg = plugin.getConfigManager();
         var menuConfig = cfg.getLevelMenuConfig();
 
-        var menu = new AuroraMenu(player, menuConfig.getTitle(), 54, false, menuId);
+        var menu = new AuroraMenu(player, menuConfig.getTitle(), 9 * menuConfig.getRows(), false, menuId);
 
         if (menuConfig.getItems().getFiller().getEnabled()) {
             menu.addFiller(ItemBuilder.of(menuConfig.getItems().getFiller().getItem()).slot(0).build(player).getItemStack());

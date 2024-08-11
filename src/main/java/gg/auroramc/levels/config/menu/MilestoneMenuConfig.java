@@ -14,6 +14,7 @@ public class MilestoneMenuConfig extends AuroraConfig {
     private String title;
     private List<Integer> displayArea;
     private Items items;
+    private Integer rows = 6;
     private Map<String, ItemConfig> customItems;
 
     @Getter
