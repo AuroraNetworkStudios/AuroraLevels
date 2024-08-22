@@ -1,0 +1,17 @@
+reloaded: "&a配置已重载!"
+level-set: "&a玩家 {player} 的等级已设置为 {level}!"
+level-set-target: "&a你的等级已被设置为 {level}!"
+data-not-loaded-yet: "&c该玩家的数据尚未载入, 请稍后再试!"
+data-not-loaded-yet-self: "&c你的数据尚未载入, 请稍后再试!"
+xp-added-feedback: "&a{amount} 点经验值已给予玩家 {player}!"
+player-only-command: "&c该命令只能由玩家执行!"
+no-permission: "&c你没有权限执行此命令!"
+invalid-syntax: "&c命令格式错误!"
+must-be-number: "&c参数需为数字!"
+player-not-found: "&c玩家不存在!"
+command-error: "&c尝试执行命令时出现错误!"
+
+region-enter-deny-min-level: "&c你必须达到 {min-level} 级才可进入该区域!"
+region-enter-deny-max-level: "&c你必须低于 {max-level} 级才可进入该区域!"
+
+config-version: 1
