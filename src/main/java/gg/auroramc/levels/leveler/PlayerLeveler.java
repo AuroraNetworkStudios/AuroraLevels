@@ -175,7 +175,9 @@ public class PlayerLeveler implements Leveler, Listener {
 
             var messageLines = config.getLevelUpMessage().getMessage();
 
+            int count = 0;
             for (var line : messageLines) {
+                count++;
                 if (line.equals("component:rewards")) {
                     if (!rewards.isEmpty()) {
                         text.append(Text.component(player, config.getDisplayComponents().get("rewards").getTitle(), placeholders));
@@ -189,7 +191,7 @@ public class PlayerLeveler implements Leveler, Listener {
                     text.append(Text.component(player, line, placeholders));
                 }
 
-                if (!line.equals(messageLines.getLast())) text.append(Component.newline());
+                if (count != messageLines.size()) text.append(Component.newline());
             }
 
             Chat.sendMessage(player, text.build());
