@@ -15,6 +15,7 @@ import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.reward.corrector.CommandCorrector;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -192,6 +193,10 @@ public class PlayerLeveler implements Leveler, Listener {
                 }
 
                 if (count != messageLines.size()) text.append(Component.newline());
+            }
+
+            if(config.getLevelUpMessage().getOpenMenuWhenClicked()) {
+                text.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/" + config.getCommandAliases().getLevel().get(0)));
             }
 
             Chat.sendMessage(player, text.build());

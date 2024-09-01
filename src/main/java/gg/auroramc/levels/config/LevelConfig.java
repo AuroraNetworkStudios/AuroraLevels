@@ -41,6 +41,7 @@ public class LevelConfig extends AuroraConfig {
     @Getter
     public static final class LevelUpMessage {
         private Boolean enabled;
+        private Boolean openMenuWhenClicked = false;
         private List<String> message;
     }
 
@@ -103,6 +104,11 @@ public class LevelConfig extends AuroraConfig {
                     ));
                     yaml.set("config-version", null);
                     yaml.set("config-version", 2);
+                },
+                (yaml) -> {
+                    yaml.set("level-up-message.open-menu-when-clicked", false);
+                    yaml.set("config-version", null);
+                    yaml.set("config-version", 3);
                 }
         );
     }

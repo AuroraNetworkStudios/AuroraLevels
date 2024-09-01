@@ -34,6 +34,7 @@ display-components:
 
 level-up-message:
   enabled: true
+  open-menu-when-clicked: false
   message:
     - "&3&m----------------------------------------&r"
     - ' '
@@ -105,4 +106,4 @@ icon-generator:
   2: "any character, text here"
   50: "same"
 
-config-version: 2
+config-version: 3
