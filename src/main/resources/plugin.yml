@@ -13,6 +13,7 @@ softdepend:
   - "PlaceholderAPI"
   - "MythicLib"
   - "WorldGuard"
+  - "EcoSkills"
 
 permissions:
   aurora.levels.*:

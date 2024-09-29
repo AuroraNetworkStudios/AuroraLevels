@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -257,6 +258,6 @@ public class PlayerLeveler implements Leveler, Listener {
     public void onUserLoaded(AuroraUserLoadedEvent event) {
         var player = event.getUser().getPlayer();
         if (player == null) return;
-        rewardAutoCorrector.correctRewards(player);
+        CompletableFuture.runAsync(() -> rewardAutoCorrector.correctRewards(player));
     }
 }

@@ -13,6 +13,8 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.CompletableFuture;
+
 public class AuroraLevels extends JavaPlugin {
     @Getter
     private PlayerLeveler leveler;
@@ -74,7 +76,8 @@ public class AuroraLevels extends JavaPlugin {
         commandManager.reload();
         leveler.reload(false);
 
-        Bukkit.getOnlinePlayers().forEach(player -> leveler.getRewardAutoCorrector().correctRewards(player));
+        Bukkit.getOnlinePlayers().forEach(player ->
+                CompletableFuture.runAsync(() -> leveler.getRewardAutoCorrector().correctRewards(player)));
     }
 
     @Override

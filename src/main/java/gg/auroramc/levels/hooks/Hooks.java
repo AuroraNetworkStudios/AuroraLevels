@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public enum Hooks {
     AURA_SKILLS(AuraSkillsHook.class, "AuraSkills"),
+    ECO_SKILLS(AuraSkillsHook.class, "EcoSkills"),
     LUCK_PERMS(LuckPermsHook.class, "LuckPerms"),
     MYTHIC_MOBS(MythicHook.class, "MythicMobs"),
     WORLD_GUARD(WorldguardHook.class, "WorldGuard"),

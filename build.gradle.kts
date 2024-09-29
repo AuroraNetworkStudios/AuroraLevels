@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "gg.auroramc"
-version = "1.5.3"
+version = "1.5.4-SNAPSHOT"
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
@@ -33,6 +33,7 @@ repositories {
     maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
     maven("https://maven.enginehub.org/repo/")
+    maven("https://repo.auxilor.io/repository/maven-public/")
 }
 
 dependencies {
@@ -43,6 +44,8 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.6.1")
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
+    compileOnly("com.willfp:eco:6.73.0")
+    compileOnly("com.willfp:EcoSkills:3.59.7")
 
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
