@@ -5,6 +5,7 @@ import com.willfp.ecoskills.api.modifiers.ModifierOperation;
 import com.willfp.ecoskills.api.modifiers.StatModifier;
 import com.willfp.ecoskills.stats.Stat;
 import com.willfp.ecoskills.stats.Stats;
+import gg.auroramc.aurora.api.message.Chat;
 import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.aurora.api.reward.NumberReward;
 import gg.auroramc.levels.AuroraLevels;
@@ -68,6 +69,6 @@ public class EcoSkillsStatReward extends NumberReward {
     public String getDisplay(Player player, List<Placeholder<?>> placeholders) {
         var display = super.getDisplay(player, placeholders);
         if (!valid) return display;
-        return Placeholder.execute(display, Placeholder.of("{stat}", stat.getName()));
+        return Placeholder.execute(display, Placeholder.of("{stat}", Chat.translateEverythingToMiniMessage(stat.getName())));
     }
 }
