@@ -61,6 +61,12 @@ level-up-sound:
 
 # You can create as many matchers as you want with different names, intervals, priorities and rewards
 level-matchers:
+  # To reset rewards for level 0 which isn't an actual level
+  level-zero:
+    interval: 1
+    priority: 10
+    stop: 0
+    rewards: {}
   # Do not delete the default matcher
   # You can modify it if you want, but keep the interval at 1
   # and the priority at 0, so it will match every level
