@@ -1,5 +1,7 @@
 package gg.auroramc.levels.leveler;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.events.user.AuroraUserLoadedEvent;
 import gg.auroramc.aurora.api.expression.NumberExpression;
@@ -14,6 +16,7 @@ import gg.auroramc.levels.api.event.PlayerXpGainEvent;
 import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.reward.corrector.CommandCorrector;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -28,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerLeveler implements Leveler, Listener {
@@ -41,6 +45,10 @@ public class PlayerLeveler implements Leveler, Listener {
     private final RewardFactory rewardFactory = new RewardFactory();
     @Getter
     private final RewardAutoCorrector rewardAutoCorrector = new RewardAutoCorrector();
+
+    private final Cache<Double, Integer> xpToLevelCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build();
 
     public MatcherManager getLevelMatcher() {
         return levelMatcher.get();
@@ -196,7 +204,7 @@ public class PlayerLeveler implements Leveler, Listener {
                 if (count != messageLines.size()) text.append(Component.newline());
             }
 
-            if(config.getLevelUpMessage().getOpenMenuWhenClicked()) {
+            if (config.getLevelUpMessage().getOpenMenuWhenClicked()) {
                 text.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/" + config.getCommandAliases().getLevel().get(0)));
             }
 
@@ -240,6 +248,24 @@ public class PlayerLeveler implements Leveler, Listener {
         if (level == 0) return 0;
         return levelXPCache.computeIfAbsent(level,
                 (l) -> xpFormula.get().evaluate(Placeholder.of("level", l)));
+    }
+
+    @SneakyThrows
+    public int getLevelFromXP(final double currentXp) {
+        return xpToLevelCache.get(currentXp, () -> {
+            int level = 0;
+
+            // Iterate until the total XP required for the next level exceeds the current XP
+            while (true) {
+                double xpForNextLevel = getXpForLevel(level);
+                if (xpForNextLevel > currentXp) {
+                    break;
+                }
+                level++;
+            }
+
+            return level - 1;
+        });
     }
 
     public double getFormulaValueForLevel(String formula, int level) {
