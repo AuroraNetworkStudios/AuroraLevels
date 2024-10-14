@@ -280,10 +280,21 @@ public class PlayerLeveler implements Leveler, Listener {
         return nextLevelXP - currentLevelXP;
     }
 
+    public void correctCurrentXP(Player player) {
+        var data = getUserData(player);
+        if (data.getCurrentXP() >= getRequiredXpForLevelUp(player)) {
+            data.setCurrentXP(0);
+            AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
+        }
+    }
+
     @EventHandler
     public void onUserLoaded(AuroraUserLoadedEvent event) {
         var player = event.getUser().getPlayer();
         if (player == null) return;
-        CompletableFuture.runAsync(() -> rewardAutoCorrector.correctRewards(player));
+        CompletableFuture.runAsync(() -> {
+            correctCurrentXP(player);
+            rewardAutoCorrector.correctRewards(player);
+        });
     }
 }

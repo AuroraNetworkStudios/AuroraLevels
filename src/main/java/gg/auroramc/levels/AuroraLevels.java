@@ -77,7 +77,10 @@ public class AuroraLevels extends JavaPlugin {
         leveler.reload(false);
 
         Bukkit.getOnlinePlayers().forEach(player ->
-                CompletableFuture.runAsync(() -> leveler.getRewardAutoCorrector().correctRewards(player)));
+                CompletableFuture.runAsync(() -> {
+                    leveler.correctCurrentXP(player);
+                    leveler.getRewardAutoCorrector().correctRewards(player);
+                }));
     }
 
     @Override
