@@ -1,6 +1,7 @@
 package gg.auroramc.levels.hooks.auraskills;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import dev.aurelium.auraskills.api.AuraSkillsApi;
 import dev.aurelium.auraskills.api.stat.Stat;
 import dev.aurelium.auraskills.api.stat.StatModifier;
@@ -9,9 +10,12 @@ import gg.auroramc.levels.AuroraLevels;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class AuraSkillsCorrector implements RewardCorrector {
     private final AuroraLevels plugin;
+    private final Set<UUID> toLoad = Sets.newConcurrentHashSet();
 
     public AuraSkillsCorrector(AuroraLevels plugin) {
         this.plugin = plugin;
@@ -19,6 +23,20 @@ public class AuraSkillsCorrector implements RewardCorrector {
 
     @Override
     public void correctRewards(Player player) {
+        if (AuraSkillsApi.get().getUser(player.getUniqueId()).isLoaded()) {
+            AuroraLevels.logger().debug("User is already loaded by AuraSkills applying stat correctors immediately.");
+            correctRewardsWhenLoaded(player, true);
+        } else {
+            toLoad.add(player.getUniqueId());
+        }
+    }
+
+    public void correctRewardsWhenLoaded(Player player, boolean force) {
+        if (!force && !toLoad.contains(player.getUniqueId())) return;
+        toLoad.remove(player.getUniqueId());
+
+        AuroraLevels.logger().debug("Correcting rewards for player: " + player.getName() + " was forced: " + force);
+
         var leveler = plugin.getLeveler();
         var data = leveler.getUserData(player);
         var level = data.getLevel();
