@@ -28,6 +28,7 @@ public class LevelConfig extends AuroraConfig {
     private CommandAliasConfig commandAliases;
     private Map<String, String> iconGenerator;
     private Integer leaderboardCacheSize = 10;
+    private Integer maxLevel = -1;
 
     @Getter
     public static final class CommandAliasConfig {
@@ -109,6 +110,12 @@ public class LevelConfig extends AuroraConfig {
                     yaml.set("level-up-message.open-menu-when-clicked", false);
                     yaml.set("config-version", null);
                     yaml.set("config-version", 3);
+                },
+                (yaml) -> {
+                    yaml.set("config-version", null);
+                    yaml.set("max-level", -1);
+                    yaml.setComments("max-level", List.of("Maximum level that can be achieved, use -1 for no limit"));
+                    yaml.set("config-version", 4);
                 }
         );
     }

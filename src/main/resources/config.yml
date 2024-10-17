@@ -3,6 +3,10 @@ debug: false
 # Main leveling curve
 xp-formula: "level * 100"
 
+# The maximum level that can be reached
+# If you want to disable the maximum level, set it to -1
+max-level: -1
+
 language: en
 
 # This only affects placeholder generation, like %aurora_lb_levels_name_10% and %aurora_lb_levels_fvalue_10%
@@ -112,4 +116,4 @@ icon-generator:
   2: "any character, text here"
   50: "same"
 
-config-version: 3
+config-version: 4

@@ -23,7 +23,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
@@ -95,12 +94,15 @@ public class PlayerLeveler implements Leveler, Listener {
 
     public double addXpToPlayer(Player player, double xp) {
         if (!player.hasPermission("aurora.levels.use")) return 0;
+
+        var data = getUserData(player);
+
+        if (data.getLevel() >= getLevelCap()) return 0;
+
         var event = new PlayerXpGainEvent(player, xp);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return 0;
         xp = event.getXp();
-
-        var data = getUserData(player);
 
         double requiredXpToLevelUp = getRequiredXpForLevelUp(player);
         double newXP = data.getCurrentXP() + xp;
@@ -117,8 +119,15 @@ public class PlayerLeveler implements Leveler, Listener {
         }
 
         while (newXP >= requiredXpToLevelUp) {
+            if (data.getLevel() >= getLevelCap()) {
+                data.setCurrentXP(0);
+                break;
+            }
+
             data.setLevel(data.getLevel() + 1);
-            data.setCurrentXP(newXP - requiredXpToLevelUp);
+            if (data.getLevel() < getLevelCap()) {
+                data.setCurrentXP(newXP - requiredXpToLevelUp);
+            }
 
             newXP = data.getCurrentXP();
             requiredXpToLevelUp = getRequiredXpForLevelUp(player);
@@ -216,7 +225,17 @@ public class PlayerLeveler implements Leveler, Listener {
         }
     }
 
+    public int getLevelCap() {
+        if (plugin.getConfigManager().getLevelConfig().getMaxLevel() == -1) {
+            return Integer.MAX_VALUE;
+        } else {
+            return plugin.getConfigManager().getLevelConfig().getMaxLevel();
+        }
+    }
+
+
     public void setPlayerLevel(Player player, int level) {
+        level = Math.min(level, getLevelCap());
         var data = getUserData(player);
         data.setCurrentXP(0);
         if (data.getLevel() == level) return;
@@ -238,6 +257,7 @@ public class PlayerLeveler implements Leveler, Listener {
     }
 
     public void setPlayerLevelRaw(Player player, int level) {
+        level = Math.min(level, getLevelCap());
         var data = getUserData(player);
         data.setCurrentXP(0);
         data.setLevel(level);
@@ -283,6 +303,11 @@ public class PlayerLeveler implements Leveler, Listener {
     public void correctCurrentXP(Player player) {
         var data = getUserData(player);
         if (data.getCurrentXP() >= getRequiredXpForLevelUp(player)) {
+            data.setCurrentXP(0);
+            AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
+        }
+        if (data.getLevel() > getLevelCap()) {
+            data.setLevel(getLevelCap());
             data.setCurrentXP(0);
             AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");
         }

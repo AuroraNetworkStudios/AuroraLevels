@@ -89,7 +89,7 @@ public class LevelMenu {
             ItemConfig itemConfig;
             Material defaultMaterial;
 
-            if (iteratorLevel == level) {
+            if (iteratorLevel == level || iteratorLevel >= leveler.getLevelCap()) {
                 itemConfig = menuConfig.getItems().getCompletedLevel().merge(overrideItems.get("completed-level"));
                 defaultMaterial = Material.LIME_STAINED_GLASS_PANE;
             } else if (iteratorLevel - 1 == level) {
@@ -122,7 +122,6 @@ public class LevelMenu {
             }
 
             var lore = new ArrayList<String>();
-
 
             for (var line : itemConfig.getLore()) {
                 if (line.equals("component:rewards")) {
