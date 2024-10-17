@@ -100,7 +100,7 @@ public class LevelMenu {
                 defaultMaterial = Material.RED_STAINED_GLASS_PANE;
             }
 
-            List<Placeholder<?>> placeholders = leveler.getRewardFormulaPlaceholders(player, iteratorLevel);
+            List<Placeholder<?>> placeholders = leveler.getRewardFormulaPlaceholders(player, Math.min(iteratorLevel, leveler.getLevelCap()));
             placeholders.add(lbPositionPlaceholder);
             placeholders.add(lbPositionPercentPlaceholder);
             placeholders.add(lbBoardSizePlaceholder);
