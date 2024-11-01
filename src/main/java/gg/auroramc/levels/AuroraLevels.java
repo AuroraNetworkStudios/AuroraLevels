@@ -1,5 +1,8 @@
 package gg.auroramc.levels;
 
+import dev.aurelium.auraskills.api.AuraSkillsApi;
+import dev.aurelium.auraskills.api.skill.Skills;
+import dev.aurelium.auraskills.api.user.SkillsUser;
 import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.AuroraLogger;
 import gg.auroramc.levels.api.AuroraLevelsProvider;
@@ -10,6 +13,7 @@ import gg.auroramc.levels.hooks.HookManager;
 import gg.auroramc.levels.leveler.PlayerLeveler;
 import gg.auroramc.levels.placeholder.LevelPlaceholderHandler;
 import lombok.Getter;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -69,6 +73,8 @@ public class AuroraLevels extends JavaPlugin {
             var config = configManager.getLevelConfig();
             leveler.getLevelMatcher().reload(config.getLevelMatchers(), config.getCustomLevels());
         });
+
+        new Metrics(this, 23777);
     }
 
     public void reload() {

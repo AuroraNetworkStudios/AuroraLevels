@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "gg.auroramc"
-version = "1.5.8-SNAPSHOT"
+version = "1.5.8"
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
@@ -37,8 +37,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("gg.auroramc:Aurora:1.5.10")
+    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("gg.auroramc:Aurora:1.7.0")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("dev.aurelium:auraskills-api-bukkit:2.2.0")
     compileOnly("io.lumine:Mythic-Dist:5.6.1")
@@ -48,6 +48,7 @@ dependencies {
     compileOnly("com.willfp:EcoSkills:3.59.7")
 
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -69,6 +70,8 @@ tasks.withType<ShadowJar> {
 
     relocate("co.aikar.commands", "gg.auroramc.levels.libs.acf")
     relocate("co.aikar.locales", "gg.auroramc.levels.libs.locales")
+
+    relocate("org.bstats", "gg.auroramc.levels.libs.bstats")
 
     exclude("acf-*.properties")
 }
