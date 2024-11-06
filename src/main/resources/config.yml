@@ -59,7 +59,7 @@ xp-gain-action-bar:
 
 level-up-sound:
   enabled: true
-  sound: "ENTITY_PLAYER_LEVELUP"
+  sound: "entity.player.levelup"
   volume: 1
   pitch: 1
 

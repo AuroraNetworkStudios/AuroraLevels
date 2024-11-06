@@ -116,6 +116,11 @@ public class LevelConfig extends AuroraConfig {
                     yaml.set("max-level", -1);
                     yaml.setComments("max-level", List.of("Maximum level that can be achieved, use -1 for no limit"));
                     yaml.set("config-version", 4);
+                },
+                (yaml) -> {
+                    yaml.set("config-version", null);
+                    yaml.set("level-up-sound.sound", "entity.player.levelup");
+                    yaml.set("config-version", 5);
                 }
         );
     }
