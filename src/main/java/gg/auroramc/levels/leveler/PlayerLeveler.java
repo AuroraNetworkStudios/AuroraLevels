@@ -20,7 +20,8 @@ import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -183,10 +184,18 @@ public class PlayerLeveler implements Leveler, Listener {
 
         if (config.getLevelUpSound().getEnabled()) {
             var sound = config.getLevelUpSound();
-            player.playSound(player.getLocation(),
-                    Sound.valueOf(sound.getSound().toUpperCase()),
-                    sound.getVolume(),
-                    sound.getPitch());
+            var key = NamespacedKey.fromString(sound.getSound());
+            if (key != null) {
+                var realSound = Registry.SOUNDS.get(key);
+                if (realSound != null) {
+                    player.playSound(player.getLocation(),
+                            realSound,
+                            sound.getVolume(),
+                            sound.getPitch());
+                }
+            } else {
+                AuroraLevels.logger().warning("Invalid sound key: " + sound.getSound());
+            }
         }
 
         if (config.getLevelUpMessage().getEnabled()) {
