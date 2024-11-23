@@ -30,6 +30,24 @@ public class LevelCommand extends BaseCommand {
         new LevelMenu(plugin, player).open();
     }
 
+    @Subcommand("info")
+    @Description("Info about other player's leveling")
+    @CommandCompletion("@players")
+    @CommandPermission("aurora.levels.info.other")
+    public void onInfo(CommandSender sender, @Flags("other") Player player) {
+        if (!AuroraAPI.getUser(player.getUniqueId()).isLoaded()) {
+            Chat.sendMessage(player, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYetSelf());
+            return;
+        }
+
+        var data = plugin.getLeveler().getUserData(player);
+
+        Chat.sendMessage(sender, plugin.getConfigManager().getMessageConfig().getInfo(),
+                Placeholder.of("{player}", player.getName()),
+                Placeholder.of("{level}", data.getLevel()),
+                Placeholder.of("{current_xp}", data.getCurrentXP()));
+    }
+
     @Subcommand("%milestonesAlias")
     @Description("Opens the milestones menu")
     @CommandPermission("aurora.levels.milestones.use")

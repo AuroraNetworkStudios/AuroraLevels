@@ -10,8 +10,9 @@ invalid-syntax: "&c命令格式错误!"
 must-be-number: "&c参数需为数字!"
 player-not-found: "&c玩家不存在!"
 command-error: "&c尝试执行命令时出现错误!"
+info: "&a{player} level is {level} and the current XP is {current_xp}!"
 
 region-enter-deny-min-level: "&c你必须达到 {min-level} 级才可进入该区域!"
 region-enter-deny-max-level: "&c你必须低于 {max-level} 级才可进入该区域!"
 
-config-version: 1
+config-version: 2

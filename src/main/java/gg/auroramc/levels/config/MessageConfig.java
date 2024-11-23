@@ -21,6 +21,7 @@ public class MessageConfig extends AuroraConfig {
 
     private String reloaded = "&aReloaded configuration!";
     private String levelSet = "&aLevel set to {level} for player {player}!";
+    private String info = "&a{player} level is {level} and the current XP is {current_xp}!";
     private String levelSetTarget = "&aYour level was set to {level}!";
     private String xpAddedFeedback = "&a{amount} XP added to player {player}!";
     private String dataNotLoadedYet = "&cData for this player hasn't loaded yet, try again later!";
@@ -70,6 +71,11 @@ public class MessageConfig extends AuroraConfig {
                     yaml.set("region-enter-deny-max-level", "&cYou must be at most level {max-level} to enter this region!");
                     yaml.set("config-version", null);
                     yaml.set("config-version", 1);
+                },
+                (yaml) -> {
+                    yaml.set("config-version", null);
+                    yaml.set("info", "&a{player} level is {level} and the current XP is {current_xp}!");
+                    yaml.set("config-version", 2);
                 }
         );
     }
