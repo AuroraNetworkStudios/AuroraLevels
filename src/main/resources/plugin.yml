@@ -29,3 +29,4 @@ permissions:
           - aurora.levels.admin.addxp
           - aurora.levels.admin.reload
           - aurora.levels.admin.setraw
+          - aurora.levels.admin.info

@@ -33,7 +33,7 @@ public class LevelCommand extends BaseCommand {
     @Subcommand("info")
     @Description("Info about other player's leveling")
     @CommandCompletion("@players")
-    @CommandPermission("aurora.levels.info.other")
+    @CommandPermission("aurora.levels.admin.info")
     public void onInfo(CommandSender sender, @Flags("other") Player player) {
         if (!AuroraAPI.getUser(player.getUniqueId()).isLoaded()) {
             Chat.sendMessage(player, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYetSelf());
