@@ -1,14 +1,11 @@
 package gg.auroramc.levels;
 
-import dev.aurelium.auraskills.api.AuraSkillsApi;
-import dev.aurelium.auraskills.api.skill.Skills;
-import dev.aurelium.auraskills.api.user.SkillsUser;
 import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.AuroraLogger;
 import gg.auroramc.levels.api.AuroraLevelsProvider;
+import gg.auroramc.levels.api.data.LevelData;
 import gg.auroramc.levels.command.CommandManager;
 import gg.auroramc.levels.config.ConfigManager;
-import gg.auroramc.levels.api.data.LevelData;
 import gg.auroramc.levels.hooks.HookManager;
 import gg.auroramc.levels.leveler.PlayerLeveler;
 import gg.auroramc.levels.placeholder.LevelPlaceholderHandler;
