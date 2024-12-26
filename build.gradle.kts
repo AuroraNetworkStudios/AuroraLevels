@@ -13,12 +13,12 @@ fun loadProperties(filename: String): Properties {
 
 plugins {
     id("java")
-    id("io.github.goooler.shadow") version "8.1.7"
+    id("com.gradleup.shadow") version "8.3.3"
     id("maven-publish")
 }
 
 group = "gg.auroramc"
-version = "1.6.1"
+version = "1.6.2"
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
@@ -67,6 +67,10 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<ShadowJar> {
     archiveFileName.set("AuroraLevels-${project.version}.jar")
+
+    manifest {
+        attributes["paperweight-mappings-namespace"] = "mojang"
+    }
 
     relocate("co.aikar.commands", "gg.auroramc.levels.libs.acf")
     relocate("co.aikar.locales", "gg.auroramc.levels.libs.locales")
