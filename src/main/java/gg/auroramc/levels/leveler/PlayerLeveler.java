@@ -36,15 +36,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerLeveler implements Leveler, Listener {
     private final AuroraLevels plugin;
-    private final AtomicReference<NumberExpression> xpFormula = new AtomicReference<>();
     private final Map<Integer, Double> levelXPCache = new ConcurrentHashMap<>();
-    private final Map<String, NumberExpression> formulas = new ConcurrentHashMap<>();
+    private final Map<String, ThreadLocal<NumberExpression>> formulas = new ConcurrentHashMap<>();
     private final Map<String, Map<Integer, Double>> formulaCache = new ConcurrentHashMap<>();
     private final AtomicReference<MatcherManager> levelMatcher = new AtomicReference<>();
     @Getter
     private final RewardFactory rewardFactory = new RewardFactory();
     @Getter
     private final RewardAutoCorrector rewardAutoCorrector = new RewardAutoCorrector();
+
+    private ThreadLocal<NumberExpression> xpFormula;
 
     private final Cache<Double, Integer> xpToLevelCache = CacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
@@ -72,17 +73,19 @@ public class PlayerLeveler implements Leveler, Listener {
 
     public void reload(boolean first) {
         var config = plugin.getConfigManager().getLevelConfig();
-        var xpFormula = new NumberExpression(config.getXpFormula().replace("{level}", "level"), "level");
-        this.xpFormula.set(xpFormula);
+        this.xpFormula = ThreadLocal.withInitial(() ->
+                new NumberExpression(config.getXpFormula().replace("{level}", "level"), "level"));
 
         formulas.clear();
 
         for (var formula : config.getFormulaPlaceholders().entrySet()) {
-            formulas.put(formula.getKey(), new NumberExpression(formula.getValue().replace("{level}", "level"), "level"));
+            formulas.put(formula.getKey(),
+                    ThreadLocal.withInitial(() -> new NumberExpression(formula.getValue().replace("{level}", "level"), "level")));
         }
 
         levelXPCache.clear();
         formulaCache.clear();
+        xpToLevelCache.invalidateAll();
 
         if (!first) {
             levelMatcher.get().reload(config.getLevelMatchers(), config.getCustomLevels());
@@ -299,7 +302,7 @@ public class PlayerLeveler implements Leveler, Listener {
 
     public double getFormulaValueForLevel(String formula, int level) {
         return formulaCache.computeIfAbsent(formula, (f) -> new ConcurrentHashMap<>())
-                .computeIfAbsent(level, (l) -> formulas.get(formula).evaluate(Placeholder.of("level", l)));
+                .computeIfAbsent(level, (l) -> formulas.get(formula).get().evaluate(Placeholder.of("level", l)));
     }
 
     public double getRequiredXpForLevelUp(Player player) {

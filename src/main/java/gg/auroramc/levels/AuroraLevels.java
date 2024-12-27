@@ -14,6 +14,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 public class AuroraLevels extends JavaPlugin {
@@ -79,11 +80,15 @@ public class AuroraLevels extends JavaPlugin {
         commandManager.reload();
         leveler.reload(false);
 
-        Bukkit.getOnlinePlayers().forEach(player ->
-                CompletableFuture.runAsync(() -> {
-                    leveler.correctCurrentXP(player);
-                    leveler.getRewardAutoCorrector().correctRewards(player);
-                }));
+        var players = new ArrayList<>(Bukkit.getOnlinePlayers());
+
+        CompletableFuture.runAsync(() -> {
+            for (var player : players) {
+                if (!player.isOnline()) continue;
+                leveler.correctCurrentXP(player);
+                leveler.getRewardAutoCorrector().correctRewards(player);
+            }
+        });
     }
 
     @Override
