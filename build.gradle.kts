@@ -28,7 +28,7 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://repo.auroramc.gg/repository/maven-public/")
+    maven("https://repo.auroramc.gg/releases/")
     maven("https://repo.aikar.co/content/groups/aikar/")
     maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
@@ -38,7 +38,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
-    compileOnly("gg.auroramc:Aurora:2.1.2")
+    compileOnly("gg.auroramc:Aurora:2.1.6")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("dev.aurelium:auraskills-api-bukkit:2.2.0")
     compileOnly("io.lumine:Mythic-Dist:5.6.1")
@@ -100,9 +100,9 @@ publishing {
         maven {
             name = "AuroraMC"
             url = if (version.toString().endsWith("SNAPSHOT")) {
-                URI.create("https://repo.auroramc.gg/repository/maven-snapshots/")
+                URI.create("https://repo.auroramc.gg/snapshots/")
             } else {
-                URI.create("https://repo.auroramc.gg/repository/maven-releases/")
+                URI.create("https://repo.auroramc.gg/releases/")
             }
             credentials {
                 username = publishing.getProperty("username")
