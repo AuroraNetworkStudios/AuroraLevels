@@ -28,7 +28,7 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 ```xml
 <repository>
     <id>auroramc</id>
-    <url>https://repo.auroramc.gg/repository/maven-public/</url>
+    <url>https://repo.auroramc.gg/releases/</url>
 </repository>
 ```
 
@@ -36,7 +36,7 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 <dependency>
     <groupId>gg.auroramc</groupId>
     <artifactId>AuroraLevels</artifactId>
-    <version>1.5.1</version>
+    <version>{VERSION}</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -46,22 +46,22 @@ You can view the full documentation [here](https://docs.auroramc.gg/auroralevels
 ```gradle
 repositories {
     maven {
-        url "https://repo.auroramc.gg/repository/maven-public/"
+        url "https://repo.auroramc.gg/releases/"
     }
 }
 
 dependencies {
-    compileOnly 'gg.auroramc:AuroraLevels:1.5.1'
+    compileOnly 'gg.auroramc:AuroraLevels:{VERSION}'
 }
 ```
 
 **Kotlin DSL:**
 ```Gradle Kotlin DSL
 repositories { 
-    maven("https://repo.auroramc.gg/repository/maven-public/")
+    maven("https://repo.auroramc.gg/releases/")
 }
 
 dependencies { 
-    compileOnly("gg.auroramc:AuroraLevels:1.5.1")
+    compileOnly("gg.auroramc:AuroraLevels:{VERSION}")
 }
 ```
