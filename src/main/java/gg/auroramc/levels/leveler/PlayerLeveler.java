@@ -15,6 +15,7 @@ import gg.auroramc.levels.api.event.PlayerLevelUpEvent;
 import gg.auroramc.levels.api.event.PlayerXpGainEvent;
 import gg.auroramc.levels.api.leveler.Leveler;
 import gg.auroramc.levels.reward.corrector.CommandCorrector;
+import gg.auroramc.levels.util.RomanNumber;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
@@ -166,6 +167,7 @@ public class PlayerLeveler implements Leveler, Listener {
         formulaPlaceholders.add(Placeholder.of("{player}", player.getName()));
         formulaPlaceholders.add(Placeholder.of("{level}", level));
         formulaPlaceholders.add(Placeholder.of("{level_int}", level));
+        formulaPlaceholders.add(Placeholder.of("{level_roman}", RomanNumber.toRoman(level)));
         formulaPlaceholders.add(Placeholder.of("{level_formatted}", AuroraAPI.formatNumber(level)));
 
         return formulaPlaceholders;
