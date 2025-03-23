@@ -4,6 +4,7 @@ import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.message.Text;
 import gg.auroramc.aurora.api.placeholder.PlaceholderHandler;
 import gg.auroramc.levels.AuroraLevels;
+import gg.auroramc.levels.util.RomanNumber;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
@@ -61,6 +62,8 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
 
                 return serializer.serialize(Text.component(player, placeholder.toString()));
 
+            } else if (args[0].equals("roman")) {
+                return RomanNumber.toRoman(leveler.getUserData(player).getLevel());
             }
         }
         return String.valueOf(leveler.getUserData(player).getLevel());
@@ -78,6 +81,6 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
 
     @Override
     public List<String> getPatterns() {
-        return List.of("", "xp", "xp_formatted", "xp_short", "xpnext", "xpnext_formatted", "xpnext_short", "progressbar", "icon");
+        return List.of("", "xp", "xp_formatted", "xp_short", "xpnext", "xpnext_formatted", "xpnext_short", "progressbar", "icon", "roman");
     }
 }

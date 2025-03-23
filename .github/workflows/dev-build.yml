@@ -27,7 +27,7 @@ jobs:
           gradle-version: 8.5
 
       - name: Build with Gradle
-        run: gradle clean build --refresh-dependencies
+        run: gradle clean build
 
       - name: Upload JAR Artifact
         id: upload-jar
