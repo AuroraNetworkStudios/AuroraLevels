@@ -340,8 +340,21 @@ public class PlayerLeveler implements Leveler, Listener {
     }
 
     public double getFormulaValueForLevel(String formula, int level) {
-        return formulaCache.computeIfAbsent(formula, (f) -> new ConcurrentHashMap<>())
-                .computeIfAbsent(level, (l) -> formulas.get(formula).get().evaluate(Placeholder.of("level", l)));
+        var levelMap = formulaCache.get(formula);
+
+        if (levelMap == null) {
+            levelMap = new ConcurrentHashMap<>();
+            formulaCache.put(formula, levelMap);
+        }
+
+        var cached = levelMap.get(level);
+        if (cached != null) {
+            return cached;
+        }
+
+        double result = formulas.get(formula).get().evaluate(Placeholder.of("level", level));
+        levelMap.put(level, result);
+        return result;
     }
 
     public double getRequiredXpForLevelUp(Player player) {
