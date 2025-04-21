@@ -34,7 +34,7 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
                     return getFormattedXP(args, xp);
                 }
                 case "xpnext" -> {
-                    var xp = (leveler.getXpForLevel(leveler.getUserData(player).getLevel() + 1) - leveler.getXpForLevel(leveler.getUserData(player).getLevel()));
+                    var xp = leveler.getRequiredXpForLevelUp(player);
                     return getFormattedXP(args, xp);
                 }
                 case "progressbar" -> {
