@@ -22,6 +22,8 @@ permissions:
         default: true
       aurora.levels.milestones.use:
         default: true
+      aurora.levels.use.mainmenu:
+        default: true
       aurora.levels.admin.*:
         default: op
         children:

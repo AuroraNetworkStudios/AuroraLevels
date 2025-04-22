@@ -21,7 +21,7 @@ items:
     slot: 48
   current-page:
     name: "{current}/{max} page"
-    material: NETHER_STAR
+    material: PAPER
     slot: 49
   next-page:
     name: "&7Next page"

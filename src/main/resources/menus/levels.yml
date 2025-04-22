@@ -1,8 +1,11 @@
 title: "Player levels"
 
-# First is always the current completed level
-# Then the next level and the locked levels
 level-track: [ 20, 21, 22, 23, 24 ]
+
+# Only available if you have a max level cap set in config.yml
+use-pagination: false
+# Only available if max level cap is smaller than 64
+use-item-amounts: false
 
 rows: 6
 
@@ -50,6 +53,22 @@ items:
       - ""
       - "&c&lɴᴏᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ"
     material: RED_STAINED_GLASS_PANE
+  next-page:
+    name: "&fNext page"
+    lore:
+      - "&8Click to view the next page"
+    material: ARROW
+    slot: 50
+  previous-page:
+    name: "&fPrevious page"
+    lore:
+      - "&8Click to view the previous page"
+    material: ARROW
+    slot: 48
+  current-page:
+    name: "&fPage {current}&7/&f{max}"
+    material: PAPER
+    slot: 49
 
 # Just set it to {} if you don't want to use custom menu items
 custom-items:
@@ -83,7 +102,7 @@ custom-items:
     material: ARROW
     slot: 45
     on-left-click:
-      - "[player] menu"
+      - "[close]"
   rewards:
     name: "&fRewards"
     lore:
@@ -92,4 +111,4 @@ custom-items:
     material: DIAMOND
     slot: 8
 
-config-version: 0
+config-version: 1
