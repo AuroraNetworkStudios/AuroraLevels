@@ -56,7 +56,7 @@ public class EntryHandler extends Handler {
 
         var bukkitPlayer = BukkitAdapter.adapt(player);
 
-        if (minLevel != null && level <= minLevel) {
+        if (minLevel != null && level < minLevel) {
             Chat.sendMessage(bukkitPlayer, config.getRegionEnterDenyMinLevel(), Placeholder.of("{level}", level), Placeholder.of("{min-level}", minLevel));
             return false;
         }
