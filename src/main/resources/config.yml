@@ -78,10 +78,10 @@ level-matchers:
     interval: 1
     priority: 0
     rewards:
-      my-money-reward:
-        type: money
-        formula: "{money}"
-        display: "&8+&a{value_formatted}"
+      my-command-reward:
+        type: command
+        command: "[console] say {player} got {money}$"
+        display: "&8+&a{money_formatted} (default)"
   # On every 5th level this will override the default matcher
   # since it has a higher priority
   every5:
@@ -90,8 +90,8 @@ level-matchers:
     rewards:
       my-command-reward:
         type: command
-        command: "[console] eco give {player} {money}"
-        display: "&8+&a{money_formatted}"
+        command: "[console] say {player} got {money}$"
+        display: "&8+&a{money_formatted} (every5)"
 
 # Key must be the level number
 # You can add custom rewards to certain levels
@@ -100,19 +100,23 @@ custom-levels:
   my-custom-level:
     level: 25
     rewards:
-      my-money-reward:
-        type: money
-        formula: "{money} * 2"
-        display: "&8+&a{value_formatted}$"
-      stat-reward:
-        type: auraskills_stat
-        stat: strength
-        amount: 3
-        display: "&8+&43 {symbol} {stat}"
+      my-command-reward:
+        type: command
+        command: "say {player} has reached level 25!"
+        display: "&8+&aShiny announcement"
+#      my-money-reward:
+#        type: money
+#        formula: "{money} * 2"
+#        display: "&8+&a{value_formatted}$"
+#      stat-reward:
+#        type: auraskills_stat
+#        stat: strength
+#        amount: 3
+#        display: "&8+&43 {symbol} {stat}"
 
 icon-generator:
   0: "%any_placeholder_here%"
-  1: "%oraxen_number1%"
+  1: "%nexo_number1%"
   2: "any character, text here"
   50: "same"
 
