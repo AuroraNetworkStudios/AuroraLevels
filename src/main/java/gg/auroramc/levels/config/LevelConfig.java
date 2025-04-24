@@ -121,6 +121,14 @@ public class LevelConfig extends AuroraConfig {
                     yaml.set("config-version", null);
                     yaml.set("level-up-sound.sound", "entity.player.levelup");
                     yaml.set("config-version", 5);
+                },
+                (yaml) -> {
+                    yaml.set("config-version", null);
+
+                    var ogFormula = yaml.getString("xp-formula", "level * 100");
+                    yaml.set("xp-formula", "(" + ogFormula.replaceAll("level", "(level)") + ") - (" + ogFormula.replaceAll("level", "(level - 1)") + ")");
+
+                    yaml.set("config-version", 6);
                 }
         );
     }

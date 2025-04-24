@@ -38,6 +38,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PlayerLeveler implements Leveler, Listener {
     private final AuroraLevels plugin;
     private final Map<Integer, Double> levelXPCache = new ConcurrentHashMap<>();
+    private final Map<Integer, Double> levelTotalXPCache = new ConcurrentHashMap<>();
     private final Map<String, ThreadLocal<NumberExpression>> formulas = new ConcurrentHashMap<>();
     private final Map<String, Map<Integer, Double>> formulaCache = new ConcurrentHashMap<>();
     private final AtomicReference<MatcherManager> levelMatcher = new AtomicReference<>();
@@ -85,6 +86,7 @@ public class PlayerLeveler implements Leveler, Listener {
         }
 
         levelXPCache.clear();
+        levelTotalXPCache.clear();
         formulaCache.clear();
         xpToLevelCache.invalidateAll();
 
@@ -158,7 +160,7 @@ public class PlayerLeveler implements Leveler, Listener {
         }
 
         var totalRequiredXP = getXpForLevel(level);
-        var totalXP = getXpForLevel(getUserData(player).getLevel()) + getUserData(player).getCurrentXP();
+        var totalXP = getTotalXpForLevel(getUserData(player).getLevel()) + getUserData(player).getCurrentXP();
 
         formulaPlaceholders.add(Placeholder.of("{required_xp_total}", AuroraAPI.formatNumber(totalRequiredXP)));
         formulaPlaceholders.add(Placeholder.of("{required_xp_total_short}", AuroraAPI.formatNumberShort(totalRequiredXP)));
@@ -280,38 +282,83 @@ public class PlayerLeveler implements Leveler, Listener {
 
     public double getXpForLevel(int level) {
         if (level == 0) return 0;
-        return levelXPCache.computeIfAbsent(level,
-                (l) -> xpFormula.get().evaluate(Placeholder.of("level", l)));
+        var cached = levelXPCache.get(level);
+        if (cached != null) {
+            return cached;
+        }
+        var value = xpFormula.get().evaluate(Placeholder.of("level", level));
+        levelXPCache.put(level, value);
+        return value;
+    }
+
+    public double getTotalXpForLevel(int level) {
+        if (level <= 0) return 0;
+
+        var cached = levelTotalXPCache.get(level);
+        if (cached != null) return cached;
+
+        // Use -1 key to track highest cached level
+        int lastCached = levelTotalXPCache.getOrDefault(-1, 0D).intValue();
+        double total = levelTotalXPCache.getOrDefault(lastCached, 0D);
+
+        for (int i = lastCached + 1; i <= level; i++) {
+            total += getXpForLevel(i);
+            levelTotalXPCache.put(i, total);
+        }
+
+        levelTotalXPCache.put(-1, (double) level); // update highest cached level
+        return total;
     }
 
     @SneakyThrows
-    public int getLevelFromXP(final double currentXp) {
+    public int getLevelFromTotalXP(final double currentXp) {
         return xpToLevelCache.get(currentXp, () -> {
-            int level = 0;
+            // Step 1: Exponential search to find an upper bound
+            int low = 0;
+            int high = 1;
 
-            // Iterate until the total XP required for the next level exceeds the current XP
-            while (true) {
-                double xpForNextLevel = getXpForLevel(level);
-                if (xpForNextLevel > currentXp) {
-                    break;
-                }
-                level++;
+            while (getTotalXpForLevel(high) <= currentXp) {
+                low = high;
+                high *= 2;
             }
 
-            return level - 1;
+            // Step 2: Binary search between low and high
+            while (low <= high) {
+                int mid = (low + high) / 2;
+                double midXP = getTotalXpForLevel(mid);
+
+                if (midXP > currentXp) {
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            }
+
+            // 'high' is now the last level where totalXp <= currentXp
+            return high;
         });
     }
 
     public double getFormulaValueForLevel(String formula, int level) {
-        return formulaCache.computeIfAbsent(formula, (f) -> new ConcurrentHashMap<>())
-                .computeIfAbsent(level, (l) -> formulas.get(formula).get().evaluate(Placeholder.of("level", l)));
+        var levelMap = formulaCache.get(formula);
+
+        if (levelMap == null) {
+            levelMap = new ConcurrentHashMap<>();
+            formulaCache.put(formula, levelMap);
+        }
+
+        var cached = levelMap.get(level);
+        if (cached != null) {
+            return cached;
+        }
+
+        double result = formulas.get(formula).get().evaluate(Placeholder.of("level", level));
+        levelMap.put(level, result);
+        return result;
     }
 
     public double getRequiredXpForLevelUp(Player player) {
-        var data = getUserData(player);
-        double currentLevelXP = getXpForLevel(data.getLevel());
-        double nextLevelXP = getXpForLevel(data.getLevel() + 1);
-        return nextLevelXP - currentLevelXP;
+        return getXpForLevel(getUserData(player).getLevel() + 1);
     }
 
     public void correctCurrentXP(Player player) {

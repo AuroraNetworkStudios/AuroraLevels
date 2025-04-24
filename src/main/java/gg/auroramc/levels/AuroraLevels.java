@@ -39,8 +39,8 @@ public class AuroraLevels extends JavaPlugin {
 
         AuroraAPI.getLeaderboards().registerBoard(
                 "levels",
-                (user) -> leveler.getXpForLevel(user.getData(LevelData.class).getLevel()) + user.getData(LevelData.class).getCurrentXP(),
-                (entry) -> AuroraAPI.formatNumber(leveler.getLevelFromXP(entry.getValue())),
+                (user) -> leveler.getTotalXpForLevel(user.getData(LevelData.class).getLevel()) + user.getData(LevelData.class).getCurrentXP(),
+                (entry) -> AuroraAPI.formatNumber(leveler.getLevelFromTotalXP(entry.getValue())),
                 configManager.getLevelConfig().getLeaderboardCacheSize(),
                 1
         );

@@ -8,6 +8,7 @@ import gg.auroramc.aurora.api.message.Placeholder;
 import gg.auroramc.levels.AuroraLevels;
 import gg.auroramc.levels.menu.LevelMenu;
 import gg.auroramc.levels.menu.MilestonesMenu;
+import gg.auroramc.levels.menu.PaginatedLevelMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,11 +24,18 @@ public class LevelCommand extends BaseCommand {
     @Description("Opens the level menu")
     @CommandPermission("aurora.levels.use")
     public void onMenu(Player player) {
+        if(!player.hasPermission("aurora.levels.use.mainmenu")) {
+            return;
+        }
         if (!AuroraAPI.getUser(player.getUniqueId()).isLoaded()) {
             Chat.sendMessage(player, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYetSelf());
             return;
         }
-        new LevelMenu(plugin, player).open();
+        if (plugin.getConfigManager().getLevelMenuConfig().getUsePagination() && plugin.getConfigManager().getLevelConfig().getMaxLevel() != -1) {
+            new PaginatedLevelMenu(plugin, player).open();
+        } else {
+            new LevelMenu(plugin, player).open();
+        }
     }
 
     @Subcommand("info")

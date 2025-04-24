@@ -28,42 +28,47 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
         var leveler = plugin.getLeveler();
 
         if (args.length > 0) {
-            if (args[0].equals("xp")) {
-                var xp = leveler.getUserData(player).getCurrentXP();
-                return getFormattedXP(args, xp);
-            } else if (args[0].equals("xpnext")) {
-                var xp = (leveler.getXpForLevel(leveler.getUserData(player).getLevel() + 1) - leveler.getXpForLevel(leveler.getUserData(player).getLevel()));
-                return getFormattedXP(args, xp);
-            } else if (args[0].equals("progressbar")) {
-                var currentXP = leveler.getUserData(player).getCurrentXP();
-                var requiredXP = leveler.getRequiredXpForLevelUp(player);
-                var menuConfig = plugin.getConfigManager().getLevelMenuConfig();
-                var bar = menuConfig.getProgressBar();
-                var pcs = bar.getLength();
-                var completedPercent = currentXP / requiredXP;
-                var completedPcs = ((Double) Math.floor(pcs * completedPercent)).intValue();
-                var remainingPcs = pcs - completedPcs;
-                var rawBar = bar.getFilledCharacter().repeat(completedPcs) + bar.getUnfilledCharacter().repeat(remainingPcs) + "&r";
-                return serializer.serialize(Text.component(rawBar));
-            } else if (args[0].equals("icon")) {
-                String level = String.valueOf(leveler.getUserData(player).getLevel());
-                StringBuilder placeholder = new StringBuilder(plugin.getConfigManager().getLevelConfig().getIconGenerator().getOrDefault(level, ""));
+            switch (args[0]) {
+                case "xp" -> {
+                    var xp = leveler.getUserData(player).getCurrentXP();
+                    return getFormattedXP(args, xp);
+                }
+                case "xpnext" -> {
+                    var xp = leveler.getRequiredXpForLevelUp(player);
+                    return getFormattedXP(args, xp);
+                }
+                case "progressbar" -> {
+                    var currentXP = leveler.getUserData(player).getCurrentXP();
+                    var requiredXP = leveler.getRequiredXpForLevelUp(player);
+                    var menuConfig = plugin.getConfigManager().getLevelMenuConfig();
+                    var bar = menuConfig.getProgressBar();
+                    var pcs = bar.getLength();
+                    var completedPercent = currentXP / requiredXP;
+                    var completedPcs = ((Double) Math.floor(pcs * completedPercent)).intValue();
+                    var remainingPcs = pcs - completedPcs;
+                    var rawBar = bar.getFilledCharacter().repeat(completedPcs) + bar.getUnfilledCharacter().repeat(remainingPcs) + "&r";
+                    return serializer.serialize(Text.component(rawBar));
+                }
+                case "icon" -> {
+                    String level = String.valueOf(leveler.getUserData(player).getLevel());
+                    StringBuilder placeholder = new StringBuilder(plugin.getConfigManager().getLevelConfig().getIconGenerator().getOrDefault(level, ""));
 
-                if (placeholder.isEmpty()) {
-                    for (String c : level.split("")) {
-                        String charIcon = plugin.getConfigManager().getLevelConfig().getIconGenerator().get(c);
-                        if (charIcon == null) {
-                            return null;
-                        } else {
-                            placeholder.append(charIcon);
+                    if (placeholder.isEmpty()) {
+                        for (String c : level.split("")) {
+                            String charIcon = plugin.getConfigManager().getLevelConfig().getIconGenerator().get(c);
+                            if (charIcon == null) {
+                                return null;
+                            } else {
+                                placeholder.append(charIcon);
+                            }
                         }
                     }
+
+                    return serializer.serialize(Text.component(player, placeholder.toString()));
                 }
-
-                return serializer.serialize(Text.component(player, placeholder.toString()));
-
-            } else if (args[0].equals("roman")) {
-                return RomanNumber.toRoman(leveler.getUserData(player).getLevel());
+                case "roman" -> {
+                    return RomanNumber.toRoman(leveler.getUserData(player).getLevel());
+                }
             }
         }
         return String.valueOf(leveler.getUserData(player).getLevel());
