@@ -76,12 +76,12 @@ public class LevelPlaceholderHandler implements PlaceholderHandler {
 
     private String getFormattedXP(String[] args, double xp) {
         if (args.length > 1 && args[1].equals("formatted")) {
-            return AuroraAPI.formatNumber(((Double) xp).longValue());
+            return AuroraAPI.formatNumber(xp);
         }
         if (args.length > 1 && args[1].equals("short")) {
             return AuroraAPI.formatNumberShort(xp);
         }
-        return String.valueOf(((Double) xp).longValue());
+        return String.valueOf(xp);
     }
 
     @Override
