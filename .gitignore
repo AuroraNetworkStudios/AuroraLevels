@@ -42,5 +42,6 @@ bin/
 .DS_Store
 
 !/libs/*.jar
+run/
 
 publish.properties

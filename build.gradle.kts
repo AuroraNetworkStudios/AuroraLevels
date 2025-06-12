@@ -17,6 +17,7 @@ plugins {
     id("java")
     id("com.gradleup.shadow") version "8.3.3"
     id("maven-publish")
+    id("xyz.jpenilla.run-paper") version "2.3.0"
 }
 
 group = "gg.auroramc"
@@ -92,6 +93,13 @@ tasks.processResources {
 tasks {
     build {
         dependsOn(shadowJar)
+    }
+    runServer {
+        downloadPlugins {
+            modrinth("AuroraLib", "2.3.1")
+            hangar("PlaceholderAPI", "2.11.6")
+        }
+        minecraftVersion("1.21.5")
     }
 }
 
