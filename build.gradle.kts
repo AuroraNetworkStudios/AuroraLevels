@@ -21,7 +21,7 @@ plugins {
 }
 
 group = "gg.auroramc"
-version = "2.0.1"
+version = "2.0.2"
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
@@ -41,7 +41,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
-    compileOnly("gg.auroramc:Aurora:2.1.6")
+    compileOnly("gg.auroramc:Aurora:2.4.0")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("dev.aurelium:auraskills-api-bukkit:2.2.0")
     compileOnly("io.lumine:Mythic-Dist:5.6.1")
@@ -96,10 +96,10 @@ tasks {
     }
     runServer {
         downloadPlugins {
-            modrinth("AuroraLib", "2.3.1")
+            modrinth("AuroraLib", "2.4.0")
             hangar("PlaceholderAPI", "2.11.6")
         }
-        minecraftVersion("1.21.5")
+        minecraftVersion("1.21.10")
     }
 }
 
