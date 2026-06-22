@@ -15,23 +15,28 @@ fun loadProperties(filename: String): Properties {
 
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.3"
+    id("com.gradleup.shadow") version "9.4.2"
     id("maven-publish")
-    id("xyz.jpenilla.run-paper") version "2.3.0"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 group = "gg.auroramc"
-version = "2.0.2"
+version = "2.1.0-SNAPSHOT"
 
-java.sourceCompatibility = JavaVersion.VERSION_21
-java.targetCompatibility = JavaVersion.VERSION_21
-
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
 
 repositories {
     mavenCentral()
     mavenLocal()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.auroramc.gg/releases/")
+    maven("https://repo.auroramc.gg/snapshots/")
     maven("https://repo.aikar.co/content/groups/aikar/")
     maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
@@ -40,8 +45,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
-    compileOnly("gg.auroramc:Aurora:2.4.0")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.31-alpha")
+    compileOnly("gg.auroramc:Aurora:2.6.0-SNAPSHOT")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("dev.aurelium:auraskills-api-bukkit:2.2.0")
     compileOnly("io.lumine:Mythic-Dist:5.6.1")
@@ -53,11 +58,12 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("io.papermc.paper:paper-api:26.2.build.31-alpha")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.32")
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    compileOnly("org.projectlombok:lombok:1.18.46")
+    annotationProcessor("org.projectlombok:lombok:1.18.46")
 }
 
 tasks.test {
@@ -95,11 +101,7 @@ tasks {
         dependsOn(shadowJar)
     }
     runServer {
-        downloadPlugins {
-            modrinth("AuroraLib", "2.4.0")
-            hangar("PlaceholderAPI", "2.11.6")
-        }
-        minecraftVersion("1.21.10")
+        minecraftVersion("26.2")
     }
 }
 

@@ -230,7 +230,7 @@ public class PlayerLeveler implements Leveler, Listener {
             }
 
             if (config.getLevelUpMessage().getOpenMenuWhenClicked()) {
-                text.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/" + config.getCommandAliases().getLevel().get(0)));
+                text.clickEvent(ClickEvent.runCommand("/" + config.getCommandAliases().getLevel().get(0)));
             }
 
             Chat.sendMessage(player, text.build());
