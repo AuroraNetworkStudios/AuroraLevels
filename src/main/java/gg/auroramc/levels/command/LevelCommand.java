@@ -44,7 +44,7 @@ public class LevelCommand extends BaseCommand {
     @CommandPermission("aurora.levels.admin.info")
     public void onInfo(CommandSender sender, @Flags("other") Player player) {
         if (!AuroraAPI.getUser(player.getUniqueId()).isLoaded()) {
-            Chat.sendMessage(player, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYetSelf());
+            Chat.sendMessage(sender, plugin.getConfigManager().getMessageConfig().getDataNotLoadedYet());
             return;
         }
 

@@ -69,7 +69,7 @@ public class PaginatedLevelMenu {
                 )
         );
         var lbBoardSizePlaceholder = Placeholder.of("{lb_size}", AuroraAPI.formatNumber(Math.max(AuroraAPI.getLeaderboards().getBoardSize("levels"), lb == null || lb.getPosition() == 0 ? Bukkit.getOnlinePlayers().size() : Math.max(lb.getPosition(), Bukkit.getOnlinePlayers().size()))));
-        var totalCurrentXP = leveler.getXpForLevel(leveler.getUserData(player).getLevel()) + leveler.getUserData(player).getCurrentXP();
+        var totalCurrentXP = leveler.getTotalXpForLevel(leveler.getUserData(player).getLevel()) + leveler.getUserData(player).getCurrentXP();
 
         for (var customItem : menuConfig.getCustomItems().values()) {
             menu.addItem(ItemBuilder.of(customItem)

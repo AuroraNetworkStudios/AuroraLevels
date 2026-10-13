@@ -2,6 +2,8 @@ package gg.auroramc.levels.api.leveler;
 
 import gg.auroramc.aurora.api.levels.MatcherManager;
 import gg.auroramc.aurora.api.message.Placeholder;
+import gg.auroramc.aurora.api.reward.RewardAutoCorrector;
+import gg.auroramc.aurora.api.reward.RewardFactory;
 import gg.auroramc.levels.api.data.LevelData;
 import org.bukkit.entity.Player;
 
@@ -77,4 +79,20 @@ public interface Leveler {
      * @return  level matcher
      */
     MatcherManager getLevelMatcher();
+
+    /**
+     * Get the reward factory used to create level rewards.
+     * Register custom reward types here.
+     *
+     * @return  reward factory
+     */
+    RewardFactory getRewardFactory();
+
+    /**
+     * Get the reward auto corrector that runs when a player's data is loaded.
+     * Register custom reward correctors here.
+     *
+     * @return  reward auto corrector
+     */
+    RewardAutoCorrector getRewardAutoCorrector();
 }

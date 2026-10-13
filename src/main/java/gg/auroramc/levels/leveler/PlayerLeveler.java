@@ -266,7 +266,7 @@ public class PlayerLeveler implements Leveler, Listener {
         for (int l = data.getLevel() + 1; l <= level; l++) {
             data.setLevel(l);
             rewardPlayer(player, l);
-            Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, level));
+            Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(player, l));
         }
 
         AuroraAPI.getLeaderboards().updateUser(AuroraAPI.getUserManager().getUser(player), "levels");

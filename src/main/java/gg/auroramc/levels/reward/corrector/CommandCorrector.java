@@ -6,7 +6,8 @@ import gg.auroramc.levels.AuroraLevels;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class CommandCorrector implements RewardCorrector {
@@ -24,7 +25,7 @@ public class CommandCorrector implements RewardCorrector {
             var data = leveler.getUserData(player);
             var level = data.getLevel();
 
-            final var rewards = new HashMap<Integer, CommandReward>();
+            final var rewards = new ArrayList<Map.Entry<Integer, CommandReward>>();
 
             for (int i = 1; i < level + 1; i++) {
                 var matcher = leveler.getLevelMatcher().getBestMatcher(i);
@@ -33,7 +34,7 @@ public class CommandCorrector implements RewardCorrector {
                 for (var reward : matcher.computeRewards(i)) {
                     if (reward instanceof CommandReward commandReward) {
                         if (commandReward.shouldBeCorrected(player, i)) {
-                            rewards.put(i, commandReward);
+                            rewards.add(Map.entry(i, commandReward));
                         }
                     }
                 }
@@ -42,10 +43,11 @@ public class CommandCorrector implements RewardCorrector {
             if (rewards.isEmpty()) return;
 
             Bukkit.getGlobalRegionScheduler().run(plugin, (task) -> {
-                rewards.forEach((lvl, reward) -> {
-                    if (!player.isOnline()) return;
-                    reward.execute(player, lvl, leveler.getRewardFormulaPlaceholders(player, lvl));
-                });
+                for (var entry : rewards) {
+                    if (!player.isOnline()) break;
+                    var lvl = entry.getKey();
+                    entry.getValue().execute(player, lvl, leveler.getRewardFormulaPlaceholders(player, lvl));
+                }
                 AuroraLevels.logger().debug("Corrected %d command rewards for player %s".formatted(rewards.size(), player.getName()));
             });
         });
