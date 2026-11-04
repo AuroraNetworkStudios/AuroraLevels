@@ -1,24 +1,13 @@
 package gg.auroramc.levels.config;
 
-import gg.auroramc.aurora.api.config.AuroraConfig;
-import gg.auroramc.levels.AuroraLevels;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 
 @Getter
-public class MessageConfig extends AuroraConfig {
-
+public class MessageConfig {
     private String reloaded = "&aReloaded configuration!";
     private String levelSet = "&aLevel set to {level} for player {player}!";
     private String info = "&a{player} level is {level} and the current XP is {current_xp}!";
@@ -35,36 +24,8 @@ public class MessageConfig extends AuroraConfig {
     private String regionEnterDenyMinLevel = "&cYou must be at least level {min-level} to enter this region!";
     private String regionEnterDenyMaxLevel = "&cYou must be at most level {max-level} to enter this region!";
 
-    public MessageConfig(AuroraLevels plugin, String language) {
-        super(getFile(plugin, language));
-    }
-
-    private static File getFile(AuroraLevels plugin, String language) {
-        return new File(plugin.getDataFolder(), "messages_" + language + ".yml");
-    }
-
-    public static void saveDefault(AuroraLevels plugin, String language) {
-        if (!getFile(plugin, language).exists()) {
-            try {
-                plugin.saveResource("messages_" + language + ".yml", false);
-            } catch (Exception e) {
-                AuroraLevels.logger().warning("Internal message file for language: " + language + " not found! Creating a new one from english...");
-
-                var file = getFile(plugin, language);
-
-
-                try (InputStream in = plugin.getResource("messages_en.yml")) {
-                    Files.copy(in, file.toPath());
-                } catch (IOException ex) {
-                    AuroraLevels.logger().severe("Failed to create message file for language: " + language);
-                    ex.printStackTrace();
-                }
-            }
-        }
-    }
-
-    @Override
-    protected List<Consumer<YamlConfiguration>> getMigrationSteps() {
+    // Steps by config-version, only ever appended, each sets config-version itself
+    public static List<Consumer<YamlConfiguration>> migrations() {
         return List.of(
                 (yaml) -> {
                     yaml.set("region-enter-deny-min-level", "&cYou must be at least level {min-level} to enter this region!");

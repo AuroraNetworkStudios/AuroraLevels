@@ -1,16 +1,13 @@
 package gg.auroramc.levels.config.menu;
 
-import gg.auroramc.aurora.api.config.AuroraConfig;
 import gg.auroramc.aurora.api.config.premade.ItemConfig;
-import gg.auroramc.levels.AuroraLevels;
 import lombok.Getter;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 @Getter
-public class MilestoneMenuConfig extends AuroraConfig {
+public class MilestoneMenuConfig {
     private String title;
     private List<Integer> displayArea;
     private Items items;
@@ -29,19 +26,5 @@ public class MilestoneMenuConfig extends AuroraConfig {
     public static final class FillerItem {
         private Boolean enabled;
         private ItemConfig item;
-    }
-
-    public MilestoneMenuConfig(AuroraLevels plugin) {
-        super(getFile(plugin));
-    }
-
-    private static File getFile(AuroraLevels plugin) {
-        return new File(plugin.getDataFolder(), "menus/milestones.yml");
-    }
-
-    public static void saveDefault(AuroraLevels plugin) {
-        if (!getFile(plugin).exists()) {
-            plugin.saveResource("menus/milestones.yml", false);
-        }
     }
 }
