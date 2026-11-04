@@ -1,14 +1,17 @@
 package gg.auroramc.levels.hooks.mmolib;
 
+import gg.auroramc.aurora.api.plugin.Hook;
+import gg.auroramc.aurora.api.reward.integration.MMOStatReward;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.hooks.Hook;
 
-public class MMOLibHook implements Hook {
+public class MMOLibHook implements Hook<AuroraLevels> {
+    // Levels' stat modifiers in MythicLib, kept apart from other plugins'
+    public static final String KEY = "aurora_levels";
     @Override
     public void hook(AuroraLevels plugin) {
         plugin.getLeveler().getRewardFactory()
-                .registerRewardType(NamespacedId.fromDefault("mmo_stat"), MMOStatReward.class);
+                .registerRewardType(NamespacedId.fromDefault("mmo_stat"), () -> new MMOStatReward(KEY, plugin, AuroraLevels.logger()));
 
         plugin.getLeveler().getRewardAutoCorrector()
                 .registerCorrector(NamespacedId.fromDefault("mmo_stat"), new MMOStatCorrector(plugin));

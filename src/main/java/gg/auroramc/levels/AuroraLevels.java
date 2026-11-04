@@ -2,11 +2,17 @@ package gg.auroramc.levels;
 
 import gg.auroramc.aurora.api.AuroraAPI;
 import gg.auroramc.aurora.api.AuroraLogger;
+import gg.auroramc.aurora.api.plugin.Hooks;
 import gg.auroramc.levels.api.AuroraLevelsProvider;
 import gg.auroramc.levels.api.data.LevelData;
 import gg.auroramc.levels.command.CommandManager;
 import gg.auroramc.levels.config.ConfigManager;
-import gg.auroramc.levels.hooks.HookManager;
+import gg.auroramc.levels.hooks.auraskills.AuraSkillsHook;
+import gg.auroramc.levels.hooks.ecoskills.EcoSkillsHook;
+import gg.auroramc.levels.hooks.luckperms.LuckPermsHook;
+import gg.auroramc.levels.hooks.mmolib.MMOLibHook;
+import gg.auroramc.levels.hooks.mythic.MythicHook;
+import gg.auroramc.levels.hooks.worldguard.WorldguardHook;
 import gg.auroramc.levels.leveler.PlayerLeveler;
 import gg.auroramc.levels.placeholder.LevelPlaceholderHandler;
 import lombok.Getter;
@@ -24,6 +30,9 @@ public class AuroraLevels extends JavaPlugin {
     private ConfigManager configManager;
 
     private CommandManager commandManager;
+    // Created in onLoad, after checking that Aurora is new enough (an older one doesn't have Hooks)
+    @Getter
+    private Hooks<AuroraLevels> hooks;
 
     private static AuroraLogger l;
 
@@ -42,7 +51,14 @@ public class AuroraLevels extends JavaPlugin {
         }
         configManager = new ConfigManager(this);
         l = AuroraAPI.createLogger("AuroraLevels", () -> configManager.getLevelConfig().getDebug());
-        HookManager.loadHooks(this);
+        hooks = new Hooks<>(this)
+                .add(AuraSkillsHook.class, "AuraSkills")
+                .add(EcoSkillsHook.class, "EcoSkills")
+                .add(LuckPermsHook.class, "LuckPerms")
+                .add(MythicHook.class, "MythicMobs")
+                .add(WorldguardHook.class, "WorldGuard")
+                .add(MMOLibHook.class, "MythicLib");
+        hooks.load();
 
         AuroraAPI.getLeaderboards().registerBoard(
                 "levels",
@@ -76,7 +92,7 @@ public class AuroraLevels extends JavaPlugin {
             e.printStackTrace();
         }
 
-        HookManager.enableHooks(this);
+        hooks.enable();
 
         Bukkit.getGlobalRegionScheduler().run(this, (task) -> {
             var config = configManager.getLevelConfig();

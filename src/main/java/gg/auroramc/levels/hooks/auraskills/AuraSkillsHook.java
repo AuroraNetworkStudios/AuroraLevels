@@ -1,13 +1,17 @@
 package gg.auroramc.levels.hooks.auraskills;
 
+import gg.auroramc.aurora.api.plugin.Hook;
+import gg.auroramc.aurora.api.reward.integration.AuraSkillsStatReward;
+import gg.auroramc.aurora.api.reward.integration.AuraSkillsXpReward;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.hooks.Hook;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
 @Getter
-public class AuraSkillsHook implements Hook {
+public class AuraSkillsHook implements Hook<AuroraLevels> {
+    // Levels' stat modifiers in AuraSkills start with this, kept apart from other plugins'
+    public static final String PREFIX = "AURORA_LEVELS_";
     private AuraSkillsCorrector corrector;
 
     @Override
@@ -17,9 +21,9 @@ public class AuraSkillsHook implements Hook {
         Bukkit.getPluginManager().registerEvents(new AuraSkillsListener(this), plugin);
 
         plugin.getLeveler().getRewardFactory()
-                .registerRewardType(NamespacedId.fromDefault("auraskills_stat"), AuraSkillsStatReward.class);
+                .registerRewardType(NamespacedId.fromDefault("auraskills_stat"), () -> new AuraSkillsStatReward(PREFIX, AuroraLevels.logger()));
         plugin.getLeveler().getRewardFactory()
-                .registerRewardType(NamespacedId.fromDefault("auraskills_xp"), AuraSkillsXpReward.class);
+                .registerRewardType(NamespacedId.fromDefault("auraskills_xp"), () -> new AuraSkillsXpReward(AuroraLevels.logger()));
         plugin.getLeveler().getRewardAutoCorrector()
                 .registerCorrector(NamespacedId.fromDefault("auraskills_stat"), this.corrector);
 

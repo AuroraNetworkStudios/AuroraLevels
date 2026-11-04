@@ -1,10 +1,10 @@
 package gg.auroramc.levels.hooks.worldguard;
 
 import com.sk89q.worldguard.WorldGuard;
+import gg.auroramc.aurora.api.plugin.Hook;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.hooks.Hook;
 
-public class WorldguardHook implements Hook {
+public class WorldguardHook implements Hook<AuroraLevels> {
     @Override
     public void hook(AuroraLevels plugin) {
         EntryHandler.Factory handlerFactory = EntryHandler.FACTORY(plugin);

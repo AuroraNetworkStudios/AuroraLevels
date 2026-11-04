@@ -1,11 +1,11 @@
 package gg.auroramc.levels.hooks.luckperms;
 
+import gg.auroramc.aurora.api.plugin.Hook;
 import gg.auroramc.aurora.api.reward.PermissionReward;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.hooks.Hook;
 
-public class LuckPermsHook implements Hook {
+public class LuckPermsHook implements Hook<AuroraLevels> {
     @Override
     public void hook(AuroraLevels plugin) {
         plugin.getLeveler().getRewardFactory().registerRewardType(NamespacedId.fromDefault("permission"), PermissionReward.class);

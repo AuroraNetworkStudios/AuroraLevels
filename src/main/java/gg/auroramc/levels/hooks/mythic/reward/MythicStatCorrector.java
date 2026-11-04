@@ -2,7 +2,9 @@ package gg.auroramc.levels.hooks.mythic.reward;
 
 import com.google.common.collect.Maps;
 import gg.auroramc.aurora.api.reward.RewardCorrector;
+import gg.auroramc.aurora.api.reward.integration.MythicStatReward;
 import gg.auroramc.levels.AuroraLevels;
+import gg.auroramc.levels.hooks.mythic.MythicHook;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.skills.stats.StatModifierType;
 import io.lumine.mythic.core.skills.stats.StatType;
@@ -30,7 +32,7 @@ public class MythicStatCorrector implements RewardCorrector {
         mythic.getStatManager().getStats().values()
                 .forEach(statType -> {
                     if (!statType.isEnabled()) return;
-                    registry.removeValue(statType, MythicStatReward.getSource());
+                    registry.removeValue(statType, MythicHook.SOURCE);
                 });
 
         // Gather new stat modifiers
@@ -53,7 +55,7 @@ public class MythicStatCorrector implements RewardCorrector {
                 var modifierType = modifierEntry.getKey();
                 var value = modifierEntry.getValue();
                 AuroraLevels.logger().debug("Adding stat " + statType.getKey() + " with value " + value + " to player " + player.getName());
-                registry.putValue(statType, MythicStatReward.getSource(), modifierType, value);
+                registry.putValue(statType, MythicHook.SOURCE, modifierType, value);
             }
         }
     }

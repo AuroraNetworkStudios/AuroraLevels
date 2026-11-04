@@ -2,6 +2,7 @@ package gg.auroramc.levels.hooks.mmolib;
 
 import com.google.common.collect.Maps;
 import gg.auroramc.aurora.api.reward.RewardCorrector;
+import gg.auroramc.aurora.api.reward.integration.MMOStatReward;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
@@ -40,7 +41,7 @@ public class MMOStatCorrector implements RewardCorrector {
             var formulaPlaceholders = leveler.getRewardFormulaPlaceholders(player, i);
             for (var reward : matcher.computeRewards(i)) {
                 if (reward instanceof MMOStatReward statReward && statReward.isValid()) {
-                    var key = NamespacedId.of(MMOStatReward.getMMO_STAT(), statReward.getStat()).toString();
+                    var key = NamespacedId.of(MMOLibHook.KEY, statReward.getStat()).toString();
                     var current = statReward.getCurrentModifier(key, stats);
                     UUID uuid = current != null ? current.getUniqueId() : UUID.randomUUID();
                     statMap.merge(statReward.getStat(),

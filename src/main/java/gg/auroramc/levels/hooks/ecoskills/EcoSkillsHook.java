@@ -1,10 +1,10 @@
 package gg.auroramc.levels.hooks.ecoskills;
 
+import gg.auroramc.aurora.api.plugin.Hook;
 import gg.auroramc.aurora.api.util.NamespacedId;
 import gg.auroramc.levels.AuroraLevels;
-import gg.auroramc.levels.hooks.Hook;
 
-public class EcoSkillsHook implements Hook {
+public class EcoSkillsHook implements Hook<AuroraLevels> {
     @Override
     public void hook(AuroraLevels plugin) {
         plugin.getLeveler().getRewardFactory()
