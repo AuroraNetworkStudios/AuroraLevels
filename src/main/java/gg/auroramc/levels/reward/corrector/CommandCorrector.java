@@ -42,14 +42,15 @@ public class CommandCorrector implements RewardCorrector {
 
             if (rewards.isEmpty()) return;
 
-            Bukkit.getGlobalRegionScheduler().run(plugin, (task) -> {
+            // On the player's own thread, the actions touch the player (on Folia only that thread may)
+            player.getScheduler().run(plugin, (task) -> {
                 for (var entry : rewards) {
                     if (!player.isOnline()) break;
                     var lvl = entry.getKey();
                     entry.getValue().execute(player, lvl, leveler.getRewardFormulaPlaceholders(player, lvl));
                 }
                 AuroraLevels.logger().debug("Corrected %d command rewards for player %s".formatted(rewards.size(), player.getName()));
-            });
+            }, null);
         });
     }
 }
